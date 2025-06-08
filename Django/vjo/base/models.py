@@ -2,7 +2,12 @@
 import os
 import uuid
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+from django.utils import timezone
 from datetime import datetime, timedelta, time
+
+from base.managers import CustomUserManager
+
 
 def upload_to_profile_images(instance, filename):
     ext = filename.split('.')[-1]
@@ -15,13 +20,33 @@ def upload_to_gpx(instance, filename):
     return os.path.join('gpx/', new_filename)
 
 #Create friendlist and subscribers list
-class User(models.Model):
+class User(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = None
     full_name = models.CharField(max_length=100, null=False)
-    email = models.EmailField()
+    email = models.EmailField(unique = True)
     password = models.CharField(max_length=256, null=False)
     number = models.CharField(max_length=10, null=False)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
 
+    is_superuser = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    #Meta fields
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['full_name', 'password']
+    EMAIL_FIELD = 'email'
+
+    def has_perm(self, perm, obj=None):
+        return self.is_staff or self.is_superuser
+
+    def has_module_perms(self, app_label):
+        return self.is_staff or self.is_superuser
+
+
+    objects = CustomUserManager()
     def __str__(self):
         return f"{self.full_name}"
 
@@ -29,12 +54,13 @@ class User(models.Model):
 
 #Add more info
 class Activity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, null=False)
-    duration = models.TimeField(default = "", blank=True, editable = False, null=False)
+    duration = models.TimeField(blank=True, editable = False, null=False)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     description = models.TextField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='activities')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities', db_index=True)
     gpx_file = models.FileField(upload_to=upload_to_gpx, null=False)
 
 
