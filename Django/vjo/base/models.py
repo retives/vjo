@@ -10,7 +10,6 @@ from datetime import datetime, timedelta, time
 
 from base.managers import CustomUserManager
 
-
 def upload_to_profile_images(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f"{uuid.uuid4()}.{ext}"
@@ -47,7 +46,6 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_staff or self.is_superuser
 
-
     objects = CustomUserManager()
     def __str__(self):
         return f"{self.full_name}"
@@ -55,26 +53,37 @@ class User(AbstractBaseUser):
 
 class GPX(models.Model):
     file = models.FileField(upload_to=upload_to_gpx, null=False)
-    name = models.CharField(max_length=100, null=False)
+    def filename(self):
+        return os.path.basename(self.file.name)
 
-    duration = models.DurationField(editable=False, null=False)
-    moving_time = models.DurationField(editable=False, null=False)
-    start_time = models.DateTimeField(editable=False, null=False)
-    end_time = models.DateTimeField(editable=False, null=False)
+#Add more info
+class Activity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    description = models.TextField(null = True, blank = True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities', db_index=True)
+    gpx_file = models.OneToOneField(GPX, on_delete=models.CASCADE, related_name='activity')
+    name = models.CharField(max_length=100, default = 'Activity')
 
-    distance = models.FloatField(editable=False, null=False)  # in km
-    ascent = models.FloatField(editable=False, null=False)    # in m
-    descent = models.FloatField(editable=False, null=False)   # in m
+    duration = models.DurationField(editable=False,default=timedelta)
+    moving_time = models.DurationField(editable=False, default = timedelta)
+    start_time = models.DateTimeField(editable=False, default = timezone.now)
+    end_time = models.DateTimeField(editable=False, default = timezone.now)
 
-    avg_speed = models.FloatField(editable=False, null=False)  # km/h
-    min_speed = models.FloatField(editable=False, null=False)
-    max_speed = models.FloatField(editable=False, null=False)
-    avg_pace = models.FloatField(editable=False, null=False)  # min/km (raw float)
+    distance = models.FloatField(editable=False, default = 0.0)  # in km
+    ascent = models.FloatField(editable=False, default = 0.0)    # in m
+    descent = models.FloatField(editable=False, default = 0.0)   # in m
+
+    avg_speed = models.FloatField(editable=False, default = 0.0)  # km/h
+    min_speed = models.FloatField(editable=False, default = 0.0)
+    max_speed = models.FloatField(editable=False, default = 0.0)
+    avg_pace = models.FloatField(editable=False, default = 0.0)  # min/km (raw float)
+
+    def __str__(self):
+        return f"{self.user.full_name}'s activity: {self.name}"
 
     def save(self, *args, **kwargs):
-        gpx = ezgpx.GPX(self.file.path)
+        gpx = ezgpx.GPX(self.gpx_file.file.path)
 
-        self.name = gpx.name()
         self.duration = gpx.total_elapsed_time()
         self.moving_time = gpx.moving_time()
         self.start_time = gpx.start_time()
@@ -91,24 +100,11 @@ class GPX(models.Model):
         self.avg_pace = round(gpx.avg_pace(), 2)  # in min/km
 
         super().save(*args, **kwargs)
-
     def formatted_pace(self):
         """Returns formatted pace as mm:ss"""
         minutes = int(self.avg_pace)
         seconds = int((self.avg_pace - minutes) * 60)
         return f"{minutes}:{seconds:02d} min/km"
-
-#Add more info
-class Activity(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    description = models.TextField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities', db_index=True)
-    gpx_file = models.OneToOneField(GPX, on_delete=models.CASCADE, related_name='activity')
-
-    def __str__(self):
-        return f"{self.user.username}'s activity: {self.gpx_file.name}"
-
-
 
 class ActivityImage(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
