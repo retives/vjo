@@ -27,7 +27,7 @@ class User(AbstractBaseUser):
     full_name = models.CharField(max_length=100, null=False)
     email = models.EmailField(unique = True)
     password = models.CharField(max_length=256, null=False)
-    number = models.CharField(max_length=10, null=False)
+    number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
 
     is_superuser = models.BooleanField(default=False)
