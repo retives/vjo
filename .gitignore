@@ -1,3 +1,6 @@
 /Django/vjo/vjo/keys.py
 /Django/vjo/test_files/
 /Django/vjo/db.sqlite3
+.idea/
+.venv/
+__pycache__/
