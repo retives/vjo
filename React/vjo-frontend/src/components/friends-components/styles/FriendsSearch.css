@@ -1,0 +1,33 @@
+.friends-search-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.friends-search-header {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #222;
+  text-align: center;
+}
+
+.friends-search-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  justify-content: center;
+}
+
+.friends-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: stretch;
+}
+button{
+  background-color: #276b32;
+}

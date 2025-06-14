@@ -1,0 +1,78 @@
+
+.athlete-overview-card {
+  display: flex;
+  align-items: center;
+  background: #fafbfc;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 18px 24px;
+  gap: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.image-container {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.info-container {
+  flex: 2;
+  min-width: 0;
+}
+
+.info-container h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #276b32;
+  
+}
+.info-container h2:hover {
+  color: #53b160;
+  cursor: pointer;
+}
+
+.info-container p {
+  margin: 0;
+  color: #555;
+  font-size: 0.98rem;
+}
+
+.activities-container {
+  flex: 1;
+  min-width: 120px;
+  text-align: right;
+}
+
+.activities-container h4 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 500;
+}
+
+.activities-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activities-container li {
+  font-size: 0.98rem;
+  color: #333;
+  margin-bottom: 2px;
+}
