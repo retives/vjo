@@ -13,6 +13,7 @@ export const AuthProvider = ({children}) =>{
       try {
         const decoded = jwtDecode(token);
         if (decoded.exp > Date.now() / 1000) {
+          console.log('User:', (JSON.parse(storedUser)));
           setIsLoggedIn(true);
           setUser(JSON.parse(storedUser));
         } else {

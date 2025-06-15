@@ -1,12 +1,10 @@
 import { Card, Button } from "react-bootstrap";
 import "./styles/Activity.css";
 import { usePersistedState } from "../../hooks/usePersistedState.ts";
-import axios from "axios";
-import { useEffect } from "react";
 
-const Activity = ({ activity }) => {
-    const [likes, setLikes] = usePersistedState(`likes-`, 0);
-    const [liked, setLiked] = usePersistedState(`liked-`, false);
+const Activity = ({ card }) => {
+    const [likes, setLikes] = usePersistedState(`${card.id || card.activityName}_likes`, 0);
+    const [liked, setLiked] = usePersistedState(`${card.id || card.activityName}_liked`, false);
 
     const handleLike = () => {
         if (!liked) {
@@ -16,41 +14,24 @@ const Activity = ({ activity }) => {
             setLikes(likes - 1);
             setLiked(false);
         }
+        console.log(`Activity ${card.activityName} has been ${liked ? "unliked" : "liked"}.`);
     };
-
-    const getActivities = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8000/activity-feed/`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            console.log("Activities fetched successfully:", response.data);
-        } catch (e) {
-            console.error("Error fetching activities:", e);
-        }
-    };
-
-    useEffect(() => {
-        getActivities();
-    }, []);
 
     return (
         <div className="activity-card">
             <Card>
-                <Card.Title>Title</Card.Title>
+                <Card.Title>{card.activityName}</Card.Title>
                 <Card.Img
                     variant="top"
-                    src='/'
-                    alt='Image'
+                    src={card.imageurl}
+                    alt={card.activityName}
                     className="activity-image"
-                    onError={() => console.log(`Failed to load image:`)}
+                    onError={() => console.log(`Failed to load image: ${card.imageurl}`)}
                 />
                 
                 <Card.Text>
-                    Someone<br />
-                    06-06-2025
+                    {card.athleteName}<br />
+                    {card.date}
                 </Card.Text>
                 <div className="activity-actions">
                     <Button variant="success" onClick={handleLike}>
