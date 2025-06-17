@@ -11,6 +11,9 @@ import AboutUs from './pages/AboutUs.js';
 import Profile from './pages/Profile.js';
 import AddActivity from './pages/AddActivity.js';
 import AuthContext from './utils/AuthProvider.js';
+import "leaflet/dist/leaflet.css";
+
+
 
 function App() {
 

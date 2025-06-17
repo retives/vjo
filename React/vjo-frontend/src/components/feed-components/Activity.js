@@ -1,8 +1,8 @@
 import { Card, Button } from "react-bootstrap";
 import "./styles/Activity.css";
 import { usePersistedState } from "../../hooks/usePersistedState.ts";
-import axios from "axios";
-import { useEffect } from "react";
+import MapComponent from "./ActivityMap.js";
+
 
 const Activity = ({ activity }) => {
     const [likes, setLikes] = usePersistedState(`likes-`, 0);
@@ -18,39 +18,15 @@ const Activity = ({ activity }) => {
         }
     };
 
-    const getActivities = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8000/activity-feed/`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            console.log("Activities fetched successfully:", response.data);
-        } catch (e) {
-            console.error("Error fetching activities:", e);
-        }
-    };
-
-    useEffect(() => {
-        getActivities();
-    }, []);
-
     return (
         <div className="activity-card">
             <Card>
-                <Card.Title>Title</Card.Title>
-                <Card.Img
-                    variant="top"
-                    src='/'
-                    alt='Image'
-                    className="activity-image"
-                    onError={() => console.log(`Failed to load image:`)}
-                />
+                <Card.Title>{activity.name}</Card.Title>
+                <MapComponent activityId={activity.id} />
                 
                 <Card.Text>
-                    Someone<br />
-                    06-06-2025
+                    {activity.user.name}<br />
+                    {activity.start_time}<br />
                 </Card.Text>
                 <div className="activity-actions">
                     <Button variant="success" onClick={handleLike}>
