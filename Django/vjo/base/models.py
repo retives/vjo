@@ -9,6 +9,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta, time
 
 from base.managers import CustomUserManager
+from gpxpy import parse
 
 def upload_to_profile_images(instance, filename):
     ext = filename.split('.')[-1]
@@ -77,6 +78,15 @@ class Activity(models.Model):
     min_speed = models.FloatField(editable=False, default = 0.0)
     max_speed = models.FloatField(editable=False, default = 0.0)
     avg_pace = models.FloatField(editable=False, default = 0.0)  # min/km (raw float)
+
+    def get_gpx_points(self):
+        activity = Activity.objects.get(id=self.id)
+        with open('media/gpx/' + activity.gpx_file.filename()) as f:
+            p = parse(f)
+            points = [(point.latitude, point.longitude) for route in p.routes for point in route.points] + \
+                     [(point.latitude, point.longitude) for track in p.tracks for segment in track.segments for point in
+                      segment.points]
+            return points
 
     def __str__(self):
         return f"{self.user.full_name}'s activity: {self.name}"
