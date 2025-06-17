@@ -3,44 +3,52 @@ import FriendSection from "../components/feed-components/FriendSection";
 import MiniProfile from "../components/feed-components/MiniProfile";
 import "../App.css";
 import "./styles/ActivityFeed.css";
+import axios from "axios";
+import React, { useState, useEffect } from 'react';
 
-const activityData = [
-  {
-    id: "1",
-    imageurl: "/uploads/images/afternoon-ride-10-03-2025.jpg",
-    activityName: "Afternoon Ride",
-    athleteName: "Serhii Tokariev",
-    date: "10-03-2025",
-  },
-  {
-    id: "2",
-    imageurl: "/uploads/images/afternoon-ride-13-04-2025.jpg",
-    activityName: "Afternoon Ride",
-    athleteName: "Serhii Tokariev",
-    date: "13-04-2025",
-  },
-  {
-    id: "3",
-    imageurl: "/uploads/images/afternoon-ride-26-02-2025.jpg",
-    activityName: "Afternoon Ride",
-    athleteName: "Serhii Tokariev",
-    date: "26-04-2025",
-  },
-];
 
-const ActivityFeed = (user) => {
+const ActivityFeed = ({user}) => {
+
+    const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    const getActivities = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/activity-feed/`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        setActivities(response.data.activities);
+        console.log("Fetched:", response.data);
+      } catch (e) {
+        console.error("Error fetching activities:", e);
+      }
+    };
+
+    getActivities();
+  }, []);
+
+
   return (
+    
     <div className="activity-feed">
 
-      <div className="left-section">
-        <MiniProfile user={user.user} />
+      <div className="left-section">  
+        <MiniProfile user={user} />
       </div>
-      
-      <div className="middle-section">
-        {activityData.map((activity, index) => (
-          <Activity card={activity} key={index} />
-        ))}
-      </div>
+        
+  <div className="middle-section">
+    {Array.isArray(activities) && activities.length > 0 ? (
+      activities.map((activity) => (
+        <Activity key={activity.id} activity={activity} />
+      ))
+    ) : (
+      <p>No activities found.</p>
+    )}
+  </div>
+
 
       <div className="right-section">
         <FriendSection />

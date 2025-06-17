@@ -9,7 +9,8 @@ class ActivitySerializer(ModelSerializer):
     class Meta:
         model = Activity
         fields = '__all__'
-
+    def get_plot(self, activity):
+            return activity.get_gpx_points()
 class GPXSerializer(ModelSerializer):
     formatted_pace = SerializerMethodField()
 
