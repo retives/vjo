@@ -1,0 +1,42 @@
+.activity-feed {
+  display: grid;
+  grid-template-columns: 0.5fr 0.7fr 0.5fr; 
+  gap: 20px;
+  padding: 20px;
+  margin-top: 60px
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.middle-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feed-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.activities {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.friend-section {
+  flex: 1; 
+}
+
+.right-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  max-height: 500px; 
+}

@@ -1,0 +1,76 @@
+.stats-container {
+    display: flex;
+    justify-content: space-between; 
+    text-align: center;
+    width: 100%; 
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0; 
+    border-bottom: 1px solid #e0e0e0; 
+
+}
+
+.stat-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px; 
+    margin: 0; 
+    flex: 1; 
+    font-size: 0.9rem; 
+}
+
+.stat-column:first-child {
+    border-right: 1px solid #e0e0e0;
+}
+
+.stat-column:last-child {
+    border-left: 1px solid #e0e0e0;
+}
+
+.profile-image {
+    width: 80px; 
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    border: 3px solid white; 
+    background-color: white; 
+    margin-left: 35%;
+}
+
+#mini-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    margin-top: 80px; 
+    margin-bottom: 20px;
+    width: 100%; 
+}
+
+.profile-name {
+    margin-top: 10px; 
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; 
+    overflow: hidden; 
+    width: 18rem;
+}
+
+.card-title {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d; 
+    text-align: center;
+}

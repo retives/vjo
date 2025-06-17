@@ -23,7 +23,6 @@ class LoginView(APIView):
         password = request.data.get('password')
         print('Done')
         user = authenticate(email=email, password=password)
-
         if user is not None:
             refresh = RefreshToken.for_user(user)
             serializer = UserSerializer(user)

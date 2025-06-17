@@ -1,0 +1,77 @@
+.stats-container {
+    display: flex;
+    justify-content: space-between; /* Distribute columns evenly */
+    text-align: center;
+    width: 100%; /* Make it span the card width */
+    padding: 10px 0; /* Add some vertical padding */
+    border-top: 1px solid #e0e0e0; /* Add a top border for separation */
+    border-bottom: 1px solid #e0e0e0; /* Add a bottom border for separation */
+
+}
+
+.stat-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px; /* Add horizontal padding for spacing */
+    margin: 0; /* Remove margin */
+    flex: 1; /* Make columns fill the container evenly */
+    font-size: 0.9rem; /* Adjust font size */
+}
+
+.stat-column:first-child {
+    border-right: 1px solid #e0e0e0; /* Add a right border to the first column */
+}
+
+.stat-column:last-child {
+    border-left: 1px solid #e0e0e0; /* Add a left border to the last column */
+}
+
+.profile-image {
+    width: 80px; /* Adjust size to match the design */
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto; /* Center the image horizontally */
+    position: relative;
+    z-index: 1; /* Ensure the image is above the card */
+    border: 3px solid white; /* Add a border around the image */
+    background-color: white; /* Ensure the background is white */
+    display: block; /* Ensure the image behaves like a block element */
+}
+
+#mini-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px; /* Add space below the navigation bar */
+    margin-bottom: 20px;
+    width: 100%; /* Ensure it spans the container */
+}
+
+.profile-name {
+    margin-top: 10px; /* Adjust spacing below the image */
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.card {
+    border: none; /* Remove card border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    border-radius: 10px; /* Round the corners */
+    overflow: hidden; /* Ensure content stays within the card */
+    width: 18rem; /* Adjust card width */
+}
+
+.card-title {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d; /* Subtle text color */
+    text-align: center;
+}
