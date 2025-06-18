@@ -2,6 +2,7 @@ import { Card, Button } from "react-bootstrap";
 import "./styles/Activity.css";
 import { usePersistedState } from "../../hooks/usePersistedState.ts";
 import MapComponent from "./ActivityMap.js";
+import ActivityMap from "./ActivityMap.js";
 
 
 const Activity = ({ activity }) => {
@@ -22,8 +23,10 @@ const Activity = ({ activity }) => {
         <div className="activity-card">
             <Card>
                 <Card.Title>{activity.name}</Card.Title>
-                <MapComponent activityId={activity.id} />
-                
+                <ActivityMap activity={activity} />
+                <script>
+                    console.log("Activity Map Data:", plotData);
+                </script>
                 <Card.Text>
                     {activity.user.name}<br />
                     {activity.start_time}<br />

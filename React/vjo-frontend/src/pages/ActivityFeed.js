@@ -20,7 +20,7 @@ const ActivityFeed = ({user}) => {
             'Content-Type': 'application/json'
           }
         });
-        setActivities(response.data.activities);
+        setActivities(response.data);
         console.log("Fetched:", response.data);
       } catch (e) {
         console.error("Error fetching activities:", e);
@@ -40,10 +40,13 @@ const ActivityFeed = ({user}) => {
       </div>
         
   <div className="middle-section">
-    {Array.isArray(activities) && activities.length > 0 ? (
+    {Array.isArray(activities) && activities.length !== 0 ? (
       activities.map((activity) => (
-        <Activity key={activity.id} activity={activity} />
-      ))
+      <Activity
+        key={activity.id}
+        activity={activity}
+      />
+    ))
     ) : (
       <p>No activities found.</p>
     )}

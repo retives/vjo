@@ -3,30 +3,36 @@ import axios from "axios";
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-const ActivityMap = ({activity, plotData}) => {
+const ActivityMap = ({ activity }) => {
+  const coords = activity.plot_data
+
+  if (!coords || coords.length === 0) {
+    return <p>No GPS data available for this activity.</p>;
+  }
 
   return (
     <div style={{ height: "600px", width: "100%" }}>
-      <MapContainer center={[48.3794, 31.1656]} zoom={6} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
+      <MapContainer
+        center={coords[0]}
+        zoom={13}
+        scrollWheelZoom={false}
+        dragging={false}
+        doubleClickZoom={false}
+        zoomControl={false}
+        touchZoom={false}
+        keyboard={false}
+        preferCanvas={true} 
+        zoomAnimation={false} 
+        fadeAnimation={false}
+        style={{ height: "100%", width: "100%" }}
+      >
         <TileLayer
           attribution='&copy; <a href="http://osm.org">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {Object.entries(plotData).map(([id, coords]) => {
-          const latLngs = coords.map(([lat, lon]) => [lat, lon]);
-
-          return (
-            <Polyline
-              key={id}
-              positions={latLngs}
-              color="blue"
-            >
-              <Popup>
-                {activity.name}
-              </Popup>
-            </Polyline>
-          );
-        })}
+        <Polyline positions={coords} color="blue">
+          <Popup>{activity.name}</Popup>
+        </Polyline>
       </MapContainer>
     </div>
   );
