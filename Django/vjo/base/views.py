@@ -7,6 +7,7 @@ import ezgpx
 
 from .serializers import *
 
+
 class ActivityFeedView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

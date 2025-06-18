@@ -1,22 +1,24 @@
-import React from "react";
+import {useContext} from "react";
 import { Card } from "react-bootstrap";
-
+import {AuthContext} from "../../utils/AuthProvider";
 import "./styles/MiniProfile.css"; 
-const MiniProfile = ({}) => {
-    
+const MiniProfile = () => {
+    const {user, loading} = useContext(AuthContext);
+    if (loading) {
+        return <p>Loading...</p>;
+    }
     return (
     <div id = "mini-profile">
          <Card>
-                {/* <Card.Img
+                <Card.Img       
                     variant="top"
-                    src={user.imageurl}
-                    alt={user.name}
+                    src={`http://localhost:8000${user.profile_image}`}
+                    alt={user.full_name}
                     className="profile-image"
-                    onError={() => console.log(`Failed to load image: ${user.imageurl}`)}>
-                </Card.Img> */}
+                    onError={() => console.log(`Failed to load image`)}>
+                </Card.Img>
         <Card.Title className="profile-name">
-            {/* {user.name} */}
-            Name
+            {user.full_name}
         </Card.Title>
         <div className="stats-container">
             

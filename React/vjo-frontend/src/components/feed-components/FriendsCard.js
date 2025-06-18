@@ -1,4 +1,3 @@
-import React from "react";
 import "./styles/FriendsCard.css";
 
 const FriendsCard = ({ friend }) => { 
@@ -6,7 +5,7 @@ const FriendsCard = ({ friend }) => {
         <div className="friends-card">
             <img
                 src={friend.imageurl || ""}
-
+                alt={friend.name}
                 className="friends-image"
                 onError={(e) => {
                     e.target.style.backgroundColor = "black";

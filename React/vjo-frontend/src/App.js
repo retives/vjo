@@ -10,7 +10,7 @@ import Navbar from './components/feed-components/Navbar.js';
 import AboutUs from './pages/AboutUs.js';
 import Profile from './pages/Profile.js';
 import AddActivity from './pages/AddActivity.js';
-import AuthContext from './utils/AuthProvider.js';
+import {AuthProvider} from './utils/AuthProvider.js';
 import "leaflet/dist/leaflet.css";
 
 
@@ -19,26 +19,25 @@ function App() {
 
   return (
     <div className="App">
-      <AuthContext>
-      {/* Retrieve user data from localStorage */}
+      <AuthProvider>
       <Navbar/>
-      <Router>
-        <Routes>
-          <Route path='/feed' element={<ActivityFeed/>}></Route>
-          <Route path='/signup' element={<Signup/>}></Route>
-          <Route path='/login' element={<Login/>}></Route>
-          <Route path='/friends' element={<Friends/>}></Route>
-          <Route path='/about-us' element={<AboutUs/>}></Route>
-          <Route path='/profile' element={<Profile/>}></Route>
-          <Route path='/add-activity' element={<AddActivity />} /> {/* new route */}
-          <Route path='/' element={<ActivityFeed/>} />
-
-        </Routes>
-      </Router>
+        <Router>
+          <Routes>
+            <Route path='/feed' element={<ActivityFeed/>}></Route>
+            <Route path='/signup' element={<Signup/>}></Route>
+            <Route path='/login' element={<Login/>}></Route>
+            <Route path='/friends' element={<Friends/>}></Route>
+            <Route path='/about-us' element={<AboutUs/>}></Route>
+            <Route path='/profile' element={<Profile/>}></Route>
+            <Route path='/add-activity' element={<AddActivity />} />
+            <Route path='/' element={<ActivityFeed/>} />
+            <Route path='/activity-feed' element={<ActivityFeed/>} />
+          </Routes>
+        </Router>
       <footer className="footer">
         <Footer />
       </footer>
-      </AuthContext>
+      </AuthProvider>
     </div>
   );
 }

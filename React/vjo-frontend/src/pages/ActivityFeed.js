@@ -1,16 +1,16 @@
 import Activity from "../components/feed-components/Activity";
 import FriendSection from "../components/feed-components/FriendSection";
 import MiniProfile from "../components/feed-components/MiniProfile";
+import axios from "axios";
+import { useState, useEffect} from 'react';
 import "../App.css";
 import "./styles/ActivityFeed.css";
-import axios from "axios";
-import React, { useState, useEffect } from 'react';
 
+const ActivityFeed = () => {
 
-const ActivityFeed = ({user}) => {
+  const [activities, setActivities] = useState([]);
 
-    const [activities, setActivities] = useState([]);
-
+  // Retrieve activity data from localStorage
   useEffect(() => {
     const getActivities = async () => {
       try {
@@ -32,25 +32,23 @@ const ActivityFeed = ({user}) => {
 
 
   return (
-    
     <div className="activity-feed">
-
       <div className="left-section">  
-        <MiniProfile user={user} />
+        <MiniProfile />
       </div>
         
-  <div className="middle-section">
-    {Array.isArray(activities) && activities.length !== 0 ? (
-      activities.map((activity) => (
-      <Activity
-        key={activity.id}
-        activity={activity}
-      />
-    ))
-    ) : (
-      <p>No activities found.</p>
-    )}
-  </div>
+      <div className="middle-section">
+        {Array.isArray(activities) && activities.length !== 0 ? (
+          activities.map((activity) => (
+          <Activity
+            key={activity.id}
+            activity={activity}
+          />
+        ))
+        ) : (
+          <p>No activities found.</p>
+        )}
+      </div>
 
 
       <div className="right-section">

@@ -9,7 +9,7 @@ export function usePersistedState<T>(key: string, initialValue: T) {
   });
   useEffect(() => {
     setItem(key, value);
-  }, [value]);
+  }, [key, value]);
 
   return [value, setValue] as const;
 }

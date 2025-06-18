@@ -1,39 +1,42 @@
-import React, {createContext, useState, useEffect} from 'react';
-import {jwtDecode} from 'jwt-decode';
-export const AuthContext = createContext();
+  import React, {createContext, useState, useEffect} from 'react';
+  import {jwtDecode} from 'jwt-decode';
 
-export const AuthProvider = ({children}) =>{
-        const [isLoggedIn, setIsLoggedIn] = useState(false);
-        const [user, setUser] = useState(null);
+  const AuthContext = createContext();
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      try {
-        const decoded = jwtDecode(token);
-        if (decoded.exp > Date.now() / 1000) {
-          setIsLoggedIn(true);
-          setUser(JSON.parse(storedUser));
-        } else {
+  const AuthProvider = ({children}) =>{
+          const [isLoggedIn, setIsLoggedIn] = useState(false);
+          const [user, setUser] = useState(null);
+          const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const token = localStorage.getItem('access_token');
+      const storedUser = localStorage.getItem('user');
+      if (token && storedUser) {
+        try {
+          const decoded = jwtDecode(token);
+          if (decoded.exp > Date.now() / 1000) {
+            setIsLoggedIn(true);
+            setUser(JSON.parse(storedUser));
+          } else {
+            setIsLoggedIn(false);
+            setUser(null);
+          }
+        } catch (e) {
           setIsLoggedIn(false);
           setUser(null);
         }
-      } catch (e) {
+      } else {
         setIsLoggedIn(false);
         setUser(null);
       }
-    } else {
-      setIsLoggedIn(false);
-      setUser(null);
-    }
-  }, []);
+      setLoading(false);
+    }, []);
 
-    return (
-        <AuthContext.Provider value={{isLoggedIn, user }}>
-            {children}
-        </AuthContext.Provider>
-    )}
-    export default AuthProvider;
- 
-  
+      return (
+          <AuthContext.Provider value={{isLoggedIn, user, loading }}>
+              {children}
+          </AuthContext.Provider>
+      )};
+  export {AuthProvider, AuthContext};
+
+    
