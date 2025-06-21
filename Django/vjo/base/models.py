@@ -30,6 +30,23 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=256, null=False)
     number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
+    following = models.ManyToManyField(
+        'self',
+        symmetrical = False,
+        related_name = 'followers',
+        blank=True
+    )
+    def friends(self):
+        return self.following.filter(id__in=self.followers.all())
+
+    def follow(self, user_to_follow_id):
+        user_to_follow = User.objects.get(id=user_to_follow_id)
+        self.following.add(user_to_follow)
+        return {'message' : f"{self.full_name} followed {user_to_follow.full_name}"}
+
+    def unfollow(self, user_to_unfollow_id):
+        self.following.get(id=user_to_unfollow_id)
+        return 
 
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
