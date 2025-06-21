@@ -4,15 +4,15 @@ import './styles/FriendSection.css';
 const friendsData = [
   {
     name: "Alice Johnson",
-    imageurl: "https://via.placeholder.com/50",
+    imageurl: "../images/person.png", // Replace with actual image URL
   },
   {
     name: "Bob Smith",
-    imageurl: "https://via.placeholder.com/50", 
+    imageurl: "../images/person.png", // Replace with actual image URL
   },
   {
     name: "Charlie Brown",
-    imageurl: "", 
+    imageurl: "../images/person.png", // Replace with actual image URL
   },
 ];
 

@@ -26,12 +26,14 @@ from rest_framework import serializers
 
 class ActivitySerializer(serializers.ModelSerializer):
     plot_data = serializers.SerializerMethodField()
+    user_fullname = serializers.SerializerMethodField()
     class Meta:
         model = Activity
         fields = '__all__'
     def get_plot_data(self, obj):
         return get_gpx_points(obj)
-
+    def get_user_fullname(self, obj):
+        return obj.user.full_name
 class GPXSerializer(ModelSerializer):
     formatted_pace = SerializerMethodField()
 

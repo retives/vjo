@@ -5,21 +5,11 @@ import ActivityMap from "./ActivityMap.js";
 
 
 const Activity = ({ activity }) => {
-    const [likes, setLikes] = usePersistedState(`likes-`, 0);
-    const [liked, setLiked] = usePersistedState(`liked-`, false);
 
-    const handleLike = () => {
-        if (!liked) {
-            setLikes(likes + 1);
-            setLiked(true);
-        } else {
-            setLikes(likes - 1);
-            setLiked(false);
-        }
-    };
 
     return (
         <div className="activity-card">
+            {console.log("Activity Data:", activity)}
             <Card>
                 <Card.Title>{activity.name}</Card.Title>
                 {/* potting the activity data on the map */}
@@ -28,12 +18,17 @@ const Activity = ({ activity }) => {
                     console.log("Activity Map Data:", plotData);
                 </script>
                 <Card.Text>
-                    {activity.user.full_name}<br />
-                    {activity.start_time}<br />
+
+                    Athlete: {activity.user_fullname}<br />
+                    Distance: {activity.distance} km<br />
+                    Elevation gain: {activity.elevation} m<br />
+                    Start time: {activity.start_time}<br />
+                    End time: {activity.end_time}<br />
+                    Max speed: {activity.max_speed} km/h<br />
                 </Card.Text>
                 <div className="activity-actions">
-                    <Button variant="success" onClick={handleLike}>
-                        {liked ? "Unlike" : "Like"}
+                    <Button variant="success">
+                        Like
                     </Button>
                     <Button variant="success">
                         Share
@@ -41,7 +36,7 @@ const Activity = ({ activity }) => {
                     <Button variant="success">
                         Comment
                     </Button>
-                    <span className="like-count">{likes} {likes === 1 ? "like" : "likes"}</span>
+                    <span className="like-count">0</span>
                 </div>
             </Card>
         </div>

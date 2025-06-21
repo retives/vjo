@@ -18,5 +18,19 @@ class ActivityFeedView(APIView):
         serializer = ActivitySerializer(queryset, many=True)
 
         return Response(serializer.data)
+class AddActivityView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            gpx = GPX.objects.create(file=request.gpx_file)
+            activity = Activity.objects.create(name = request.activtyName, description=request.description, user=request.user, gpx_file = gpx)
+            return Response(activity.name)
+        except:
+            print("Error")
+            return Response({'error':'Error'})
+
+
 
 

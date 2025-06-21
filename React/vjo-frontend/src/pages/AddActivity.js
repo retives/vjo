@@ -1,26 +1,41 @@
-import { useState } from "react";
+import { useContext,  useState } from "react";
 import "../App.css";
 import "./styles/AddActivity.css";
+import {AuthContext } from "../utils/AuthProvider";
+import axios from "axios";
 
 function AddActivity() {
-  const [activityName, setActivityName] = useState("");
-  const [date, setDate] = useState("");
-  const [imageurl, setImageurl] = useState("");
-  const [athleteName, setAthleteName] = useState("");
 
-  const handleSubmit = (e) => {
+  const { user } = useContext(AuthContext);
+
+  const [activityName, setActivityName] = useState("");
+  const [description, setDescription] = useState("");
+  const [gpxFile, setGpxFile] = useState(null);
+  const [image, setImage] = useState(null);
+
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      activityName,
-      date,
-      imageurl,
-      athleteName,
-    });
-    setActivityName("");
-    setDate("");
-    setImageurl("");
-    setAthleteName("");
-    alert("Activity added!");
+
+    const formData = new FormData();
+    formData.append("activityName", activityName);
+    formData.append("description", description);
+    formData.append("gpx_file", gpxFile);
+    formData.append("image", image);
+    formData.append("user", user.id);
+
+    try {
+      const response = await axios.post("http://localhost:8000/add-activity/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Activity uploaded:", response.data);
+      // Optionally reset form or redirect
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
   };
 
   return (
@@ -37,30 +52,28 @@ function AddActivity() {
           />
         </div>
         <div className="input-wrapper">
-          <label>Date</label>
+          <label>Description</label>
           <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Write about your activity..."
           />
         </div>
         <div className="input-wrapper">
-          <label>Image URL</label>
+          <label>GPX File</label>
           <input
-            type="text"
-            value={imageurl}
-            onChange={(e) => setImageurl(e.target.value)}
-            placeholder="/uploads/images/your-image.jpg"
+            type="file"
+            accept=".gpx"
+            onChange={(e) => setGpxFile(e.target.files[0])}
           />
         </div>
         <div className="input-wrapper">
-          <label>Athlete Name</label>
+          <label>Image</label>
           <input
-            type="text"
-            value={athleteName}
-            onChange={(e) => setAthleteName(e.target.value)}
-            required
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
           />
         </div>
         <button type="submit">Add Activity</button>
