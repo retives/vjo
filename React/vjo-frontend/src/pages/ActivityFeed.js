@@ -53,7 +53,6 @@ const ActivityFeed = () => {
         ))
         ) : (
           <div>
-            {console.log(activities.length)}
             <p>No activities found.</p>
           </div>
           

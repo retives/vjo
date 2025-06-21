@@ -20,8 +20,9 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
-      <Navbar/>
+      
         <Router>
+          <Navbar/>
           <Routes>
             <Route path='/feed' element={<ActivityFeed/>}></Route>
             <Route path='/signup' element={<Signup/>}></Route>
@@ -33,10 +34,11 @@ function App() {
             <Route path='/' element={<ActivityFeed/>} />
             <Route path='/activity-feed' element={<ActivityFeed/>} />
           </Routes>
-        </Router>
-      <footer className="footer">
-        <Footer />
+                <footer className="footer">
+          <Footer />
       </footer>
+        </Router>
+
       </AuthProvider>
     </div>
   );

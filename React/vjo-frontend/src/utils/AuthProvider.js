@@ -33,7 +33,7 @@
     }, []);
 
       return (
-          <AuthContext.Provider value={{isLoggedIn, user, loading }}>
+          <AuthContext.Provider value={{isLoggedIn, user, loading ,setIsLoggedIn, setUser, setLoading}}>
               {children}
           </AuthContext.Provider>
       )};

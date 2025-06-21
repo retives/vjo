@@ -4,10 +4,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/Navbar.css'; 
 import { useContext } from 'react';
 import { AuthContext } from '../../utils/AuthProvider';
-
+import {useNavigate } from 'react-router-dom';
 const NavbarMain = () => {
 
+  const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
+  const { setIsLoggedIn, setUser } = useContext(AuthContext);
+
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      // Clear local storage
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+
+      // Clear auth context
+      setIsLoggedIn(false);
+      setUser(null);
+
+      // Redirect
+      navigate("/login");
+    }
+  };
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -40,6 +60,7 @@ const NavbarMain = () => {
                   <Nav.Link href="/friends">Friends</Nav.Link>
                   <Nav.Link href="/add-activity">Add Activity</Nav.Link>
                   <Nav.Link href="/about-us">About</Nav.Link>
+                  <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                 </>
               ) : (
                 // If user is NOT logged in

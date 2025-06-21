@@ -7,16 +7,12 @@ import ActivityMap from "./ActivityMap.js";
 const Activity = ({ activity }) => {
 
 
-    return (
+    return (        
         <div className="activity-card">
-            {console.log("Activity Data:", activity)}
             <Card>
                 <Card.Title>{activity.name}</Card.Title>
                 {/* potting the activity data on the map */}
                 <ActivityMap activity={activity} />
-                <script>
-                    console.log("Activity Map Data:", plotData);
-                </script>
                 <Card.Text>
 
                     Athlete: {activity.user_fullname}<br />
