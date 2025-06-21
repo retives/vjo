@@ -23,16 +23,15 @@ function AddActivity() {
     formData.append("gpx_file", gpxFile);
     formData.append("image", image);
     formData.append("user", user.id);
-
+    console.log("Form data prepared:", formData);
     try {
+
       const response = await axios.post("http://localhost:8000/add-activity/", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
       console.log("Activity uploaded:", response.data);
-      // Optionally reset form or redirect
     } catch (error) {
       console.error("Upload failed:", error);
     }
@@ -65,7 +64,8 @@ function AddActivity() {
           <input
             type="file"
             accept=".gpx"
-            onChange={(e) => setGpxFile(e.target.files[0])}
+            onChange={(e) => setGpxFile(e.target.files[0] )}
+            required
           />
         </div>
         <div className="input-wrapper">

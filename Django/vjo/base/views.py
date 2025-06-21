@@ -3,10 +3,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import logging
+from django.db import IntegrityError
 import ezgpx
 
 from .serializers import *
 
+logger = logging.getLogger(__name__)
 
 class ActivityFeedView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -23,13 +26,19 @@ class AddActivityView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        logging.basicConfig(filename='vjo.log', level=logging.ERROR)
+        print(f"Reqeust accepted: {request.data}")
         try:
-            gpx = GPX.objects.create(file=request.gpx_file)
-            activity = Activity.objects.create(name = request.activtyName, description=request.description, user=request.user, gpx_file = gpx)
+            gpx_file = request.FILES.get('gpx_file')
+            gpx = GPX.objects.create(file=gpx_file)
+            logging.info('GPX created successfully')
+            user_id = request.data.get('user')
+            user = User.objects.get(id=user_id)
+            activity = Activity.objects.create(name = request.data.get('activityName'), description=request.data.get('description'), user=user, gpx_file = gpx)
             return Response(activity.name)
-        except:
-            print("Error")
-            return Response({'error':'Error'})
+        except(IntegrityError, ValueError, TypeError) as e:
+            logging.error('Error occurred: ',e)
+            return Response({'error':e})
 
 
 
