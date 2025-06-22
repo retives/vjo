@@ -19,9 +19,15 @@ class ActivityFeedView(APIView):
         # Fetching the activities to display (in future change to access user's and their friends' activities)
         current_user = request.user
         queryset = current_user.activities.all().order_by('-start_time')
-        serializer = ActivitySerializer(queryset, many=True)
-
-        return Response(serializer.data)
+        activity_serializer = ActivitySerializer(queryset, many=True)
+        # Fetching the users for friends suggestions
+        suggestion = User.objects.exclude(id=current_user.id)
+        user_serializer = UserSerializer(suggestion, many=True)
+        data = {
+            'activities' : activity_serializer.data,
+            'suggestions': user_serializer.data,
+        }
+        return Response(data)
 
 class AddActivityView(APIView):
     authentication_classes = [JWTAuthentication]

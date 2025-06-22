@@ -19,6 +19,7 @@ def get_gpx_points(activity):
         return points
 
 class UserSerializer(ModelSerializer):
+    friends = SerializerMethodField()
     class Meta:
         model = User
         fields = '__all__'
