@@ -24,7 +24,7 @@ const Activity = ({ activity }) => {
                 </Card.Text>
                 <div className="activity-actions">
                     <Button variant="success">
-                        Like
+                        Like <span>{/*Like count*/}</span>
                     </Button>
                     <Button variant="success">
                         Share
@@ -32,7 +32,6 @@ const Activity = ({ activity }) => {
                     <Button variant="success">
                         Comment
                     </Button>
-                    <span className="like-count">0</span>
                 </div>
             </Card>
         </div>

@@ -10,6 +10,7 @@ import "./styles/ActivityFeed.css";
 const ActivityFeed = () => {
 
   const [activities, setActivities] = useState([]);
+  const [friend_suggestions, setFriendSuggestions] = useState([]);
   const {user, loading} = useContext(AuthContext);
 
   // Retrieve activity data from localStorage
@@ -23,7 +24,10 @@ const ActivityFeed = () => {
               'Content-Type': 'application/json'
             }
           });
-          setActivities(response.data);
+          setActivities(response.data.activities);
+          setFriendSuggestions(response.data.suggestions);
+          console.log("Activities fetched:", response.data.activities);
+          console.log("Friend suggestions fetched:", friend_suggestions);
         } catch (e) {
           console.error("Error fetching activities:", e);
         }
@@ -61,7 +65,7 @@ const ActivityFeed = () => {
 
 
       <div className="right-section">
-        <FriendSection />
+        <FriendSection friend_suggestions={friend_suggestions} />
       </div>
 
     </div>

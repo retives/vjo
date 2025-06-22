@@ -6,34 +6,40 @@
   const AuthProvider = ({children}) =>{
           const [isLoggedIn, setIsLoggedIn] = useState(false);
           const [user, setUser] = useState(null);
-          const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-      const token = localStorage.getItem('access_token');
-      const storedUser = localStorage.getItem('user');
-      if (token && storedUser) {
-        try {
-          const decoded = jwtDecode(token);
-          if (decoded.exp > Date.now() / 1000) {
-            setIsLoggedIn(true);
-            setUser(JSON.parse(storedUser));
-          } else {
-            setIsLoggedIn(false);
-            setUser(null);
-          }
-        } catch (e) {
-          setIsLoggedIn(false);
-          setUser(null);
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const storedUser = localStorage.getItem("user");
+    if (token && storedUser) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded.exp > Date.now() / 1000) {
+          setIsLoggedIn(true);
+          setUser(JSON.parse(storedUser));
         }
-      } else {
-        setIsLoggedIn(false);
-        setUser(null);
+      } catch (e) {
+        console.error("Invalid token");
       }
-      setLoading(false);
-    }, []);
+    }
+  }, []);
+const login = (userData, access, refresh) =>{
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+    setIsLoggedIn(true);
+  }
+
+const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsLoggedIn(false);
+  }
 
       return (
-          <AuthContext.Provider value={{isLoggedIn, user, loading ,setIsLoggedIn, setUser, setLoading}}>
+          <AuthContext.Provider value={{isLoggedIn, user ,setIsLoggedIn, setUser, login, logout}}>
               {children}
           </AuthContext.Provider>
       )};

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utils/AuthProvider';
+import { useContext } from 'react';
 import './styles/LoginForm.css';
 import axios from 'axios';
 function LoginForm() {
@@ -8,7 +10,7 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const { login } = useContext(AuthContext);
   // Function to handle form submission
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -22,17 +24,19 @@ function LoginForm() {
         'Content-Type': 'application/json',
       },
     });
-    //Get the tokens
-    localStorage.setItem('access_token', response.data.access);
-    localStorage.setItem('refresh_token', response.data.refresh); 
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+    login(response.data.user, response.data.access, response.data.refresh);
     navigate('/');
   } catch (error) {
-    console.error('Error during login:', error);
-    setError('Wrong username or password');
-  }
-};
-
+    if (error.response && error.response.status === 500) {
+      console.error('Server error:', error.response.status);
+      setError('The server is currently unavailable. Please try again later.');
+    }
+    if (error.response && error.response.status === 401) {
+      console.error('Unauthorized:', error.response.status);
+      setError('Invalid email or password. Please try again.');
+    }
+  };
+}
 
   return (
     <div className='login-form'>

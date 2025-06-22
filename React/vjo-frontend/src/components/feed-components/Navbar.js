@@ -3,32 +3,39 @@ import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import './styles/Navbar.css'; 
 import { useContext } from 'react';
-import { AuthContext } from '../../utils/AuthProvider';
+import { AuthContext  } from '../../utils/AuthProvider';
 import {useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 const NavbarMain = () => {
 
   const navigate = useNavigate();
   const {isLoggedIn, user} = useContext(AuthContext);
-  const { setIsLoggedIn, setUser } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
 
-
-  const handleLogout = () => {
+  const handleLogout = async() => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
-      // Clear local storage
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("user");
-
-      // Clear auth context
-      setIsLoggedIn(false);
-      setUser(null);
-
-      // Redirect
-      navigate("/login");
+  const refreshToken = localStorage.getItem("refresh_token");
+  try {
+    await axios.post("http://localhost:8000/api/logout/", {
+      refresh: refreshToken,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+  } catch (err) {
+    console.error("Logout failed or token already invalidated:", err);
+  } finally {
+    // Clear tokens from localStorage either way
+    logout()
+    
+    // Redirect to login
+    navigate("/login");
     }
   };
-
+  } 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
