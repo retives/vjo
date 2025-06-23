@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from base.models import User, Activity, GPX
+from base.models import User, Activity, GPX, UserFollowing
 from gpxpy import parse
 
 def get_gpx_points(activity):
@@ -19,12 +19,24 @@ def get_gpx_points(activity):
         return points
 
 class UserSerializer(ModelSerializer):
-    friends = SerializerMethodField()
+    following = SerializerMethodField()
+    followers = SerializerMethodField()
+
     class Meta:
         model = User
-        fields = '__all__'
-    def get_friends(self, obj):
-        return obj.friends()
+        fields = ['id', 'full_name', 'email', 'profile_image', 'following', 'followers']
+
+    def get_following(self, obj):
+        return SimpleUserSerializer(obj.get_following_users(), many=True).data
+
+    def get_followers(self, obj):
+        return SimpleUserSerializer(obj.get_follower_users(), many=True).data
+
+class SimpleUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'full_name', 'profile_image']
+
 from rest_framework import serializers
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -46,3 +58,7 @@ class GPXSerializer(ModelSerializer):
 
     def get_formatted_pace(self, obj):
         return obj.formatted_pace()
+class UserFollowingSerializer(ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = '__all__'

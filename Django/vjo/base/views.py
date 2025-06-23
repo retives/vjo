@@ -6,8 +6,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 import logging
 from django.db import IntegrityError
-
-
+from django.shortcuts import get_object_or_404
+from .models import UserFollowing
 from .serializers import *
 
 logger = logging.getLogger(__name__)
@@ -57,29 +57,30 @@ class FollowView(APIView):
     def post(self, request):
         current_user = request.user
         following_id = request.data.get("following_id")
-        print(request.user)
+        following_user = get_object_or_404(User, id=following_id)
         if not following_id:
             return Response({'error': 'The user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if str(current_user.id) == str(following_id):
             return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = current_user.follow(following_id)
-        return Response(result, status=status.HTTP_201_CREATED)
+        created = current_user.follow(following_user)
+        if created:
+            return Response({'message':f'{current_user} followed {following_user}'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'message':f'{current_user} already followed {following_user}'}, status=status.HTTP_200_OK)
+
 
 class UnfollowView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print(request.user)
         current_user = request.user
-        following_id = request.data.get("following_id")
+        target_id = request.data.get('following_id')
+        target_user = get_object_or_404(User, id=target_id)
 
-        if not following_id:
-            return Response({'error': 'The user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        if str(current_user.id) == str(following_id):
-            return Response({"error": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
-
-        result = current_user.unfollow(following_id)
-        return Response(result, status=status.HTTP_201_CREATED)
+        deleted, _ = UserFollowing.objects.filter(user=current_user, following_user=target_user).delete()
+        if deleted:
+            return Response({"message": "Unfollowed successfully"}, status=200)
+        return Response({"message": "You were not following this user"}, status=400)
 

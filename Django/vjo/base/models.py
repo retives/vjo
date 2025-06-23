@@ -29,8 +29,25 @@ class User(AbstractBaseUser):
     number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
 
+    def get_following_users(self):
+        return User.objects.filter(followers__user=self)
 
+    def get_follower_users(self):
+        return User.objects.filter(following__following_user=self)
 
+    def follow(self, target_user):
+        if self == target_user:
+            raise ValueError("Cannot follow yourself")
+        return UserFollowing.objects.get_or_create(user=self, following_user=target_user)
+
+    def unfollow(self, target_user):
+        UserFollowing.objects.filter(user=self, following_user=target_user).delete()
+
+    def is_following(self, target_user):
+        return UserFollowing.objects.filter(user=self, following_user=target_user).exists()
+
+    def is_followed_by(self, target_user):
+        return UserFollowing.objects.filter(user=target_user, following_user=self).exists()
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -52,20 +69,22 @@ class User(AbstractBaseUser):
         return f"{self.full_name}"
 
 class UserFollowing(models.Model):
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user_id', 'following_user_id'], name='unique_following'),
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=['user_id', 'following_user_id'], name='unique_following'),
+    #     ]
 
-    user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='following')
-    following_user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='followers')
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='following')
+    following_user= models.ForeignKey("User", on_delete=models.CASCADE, related_name='followers')
     created = models.DateTimeField(auto_now_add=True)
 
-    def are_friends(self, user_id, friend_id):
-        return (
-            UserFollowing.objects.filter(user_id=user_id, following_user_id=friend_id).exists() and
-            UserFollowing.objects.filter(user_id=friend_id, following_user_id=user_id).exists()
-        )
+    def __str__(self):
+        return f'{self.user} - {self.following_user}'
+    # def are_friends(self, user_id, friend_id):
+    #     return (
+    #         UserFollowing.objects.filter(user_id=user_id, following_user_id=friend_id).exists() and
+    #         UserFollowing.objects.filter(user_id=friend_id, following_user_id=user_id).exists()
+    #     )
 
 
 class GPX(models.Model):

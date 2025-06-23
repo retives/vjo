@@ -12,7 +12,8 @@ const ActivityFeed = () => {
   const [activities, setActivities] = useState([]);
   const [friend_suggestions, setFriendSuggestions] = useState([]);
   const {user, loading} = useContext(AuthContext);
-
+  console.log("User in ActivityFeed:", user);
+  console.log("Suggestions in ActivityFeed:", friend_suggestions);
   // Retrieve activity data from localStorage
   useEffect(() => {
 
@@ -64,7 +65,7 @@ const ActivityFeed = () => {
 
 
       <div className="right-section">
-        <FriendSection friendsData={friend_suggestions} />
+          <FriendSection friendsData={friend_suggestions} />
       </div>
 
     </div>
