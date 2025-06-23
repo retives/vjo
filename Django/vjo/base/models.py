@@ -7,9 +7,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from datetime import datetime, timedelta, time
-
 from base.managers import CustomUserManager
-
+from django.core.exceptions import ObjectDoesNotExist
 
 def upload_to_profile_images(instance, filename):
     ext = filename.split('.')[-1]
@@ -40,13 +39,33 @@ class User(AbstractBaseUser):
         return self.following.filter(id__in=self.followers.all())
 
     def follow(self, user_to_follow_id):
-        user_to_follow = User.objects.get(id=user_to_follow_id)
+        if str(self.id) == str(user_to_follow_id):
+            return {'error': 'You cannot follow yourself'}
+
+        try:
+            user_to_follow = User.objects.get(id=user_to_follow_id)
+        except User.DoesNotExist:
+            return {'error': 'User does not exist'}
+
+        if self.following.filter(id=user_to_follow.id).exists():
+            return {'message': f"You are already following {user_to_follow.full_name}"}
+
         self.following.add(user_to_follow)
-        return {'message' : f"{self.full_name} followed {user_to_follow.full_name}"}
+        self.save()
+        return {'message': f"{self.full_name} followed {user_to_follow.full_name}"}
 
     def unfollow(self, user_to_unfollow_id):
-        self.following.get(id=user_to_unfollow_id)
-        return 
+        try:
+            user_to_unfollow = User.objects.get(id=user_to_unfollow_id)
+        except User.DoesNotExist:
+            return {'error': 'User nonexistent'}
+
+        if self.following.filter(id=user_to_unfollow_id).exists():
+            self.following.remove(user_to_unfollow)
+            self.save()
+            return {'message': f"{self.full_name} unfollowed {user_to_unfollow.full_name}"}
+        else:
+            return {'error': 'You are not following this user'}
 
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

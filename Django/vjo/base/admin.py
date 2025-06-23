@@ -3,7 +3,9 @@ from .models import *
 # Register your models here.
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['full_name', "activities"]
+    model = User
+    filter_horizontal = ('following',)
+    list_display = ('email', 'full_name')
 
 admin.site.register(User)
 admin.site.register(Activity)

@@ -26,8 +26,7 @@ const ActivityFeed = () => {
           });
           setActivities(response.data.activities);
           setFriendSuggestions(response.data.suggestions);
-          console.log("Activities fetched:", response.data.activities);
-          console.log("Friend suggestions fetched:", friend_suggestions);
+
         } catch (e) {
           console.error("Error fetching activities:", e);
         }
@@ -65,7 +64,7 @@ const ActivityFeed = () => {
 
 
       <div className="right-section">
-        <FriendSection friend_suggestions={friend_suggestions} />
+        <FriendSection friendsData={friend_suggestions} />
       </div>
 
     </div>

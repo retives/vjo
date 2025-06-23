@@ -1,6 +1,5 @@
 import { Card, Button } from "react-bootstrap";
 import "./styles/Activity.css";
-import { usePersistedState } from "../../hooks/usePersistedState.ts";
 import ActivityMap from "./ActivityMap.js";
 
 

@@ -1,11 +1,12 @@
-from django.shortcuts import render
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import status
 import logging
 from django.db import IntegrityError
-import ezgpx
+
 
 from .serializers import *
 
@@ -49,6 +50,36 @@ class AddActivityView(APIView):
             logging.error('Error occurred: ',e)
             return Response({'error':e})
 
+class FollowView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        current_user = request.user
+        following_id = request.data.get("following_id")
+        print(request.user)
+        if not following_id:
+            return Response({'error': 'The user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        if str(current_user.id) == str(following_id):
+            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
+        result = current_user.follow(following_id)
+        return Response(result, status=status.HTTP_201_CREATED)
+
+class UnfollowView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        print(request.user)
+        current_user = request.user
+        following_id = request.data.get("following_id")
+
+        if not following_id:
+            return Response({'error': 'The user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        if str(current_user.id) == str(following_id):
+            return Response({"error": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        result = current_user.unfollow(following_id)
+        return Response(result, status=status.HTTP_201_CREATED)
 
