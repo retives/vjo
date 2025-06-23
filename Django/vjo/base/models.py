@@ -20,7 +20,6 @@ def upload_to_gpx(instance, filename):
     new_filename = f"{uuid.uuid4()}.{ext}"
     return os.path.join('gpx/', new_filename)
 
-#Create friendlist and subscribers list
 class User(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
@@ -29,43 +28,8 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=256, null=False)
     number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
-    following = models.ManyToManyField(
-        'self',
-        symmetrical = False,
-        related_name = 'followers',
-        blank=True
-    )
-    def friends(self):
-        return self.following.filter(id__in=self.followers.all())
 
-    def follow(self, user_to_follow_id):
-        if str(self.id) == str(user_to_follow_id):
-            return {'error': 'You cannot follow yourself'}
 
-        try:
-            user_to_follow = User.objects.get(id=user_to_follow_id)
-        except User.DoesNotExist:
-            return {'error': 'User does not exist'}
-
-        if self.following.filter(id=user_to_follow.id).exists():
-            return {'message': f"You are already following {user_to_follow.full_name}"}
-
-        self.following.add(user_to_follow)
-        self.save()
-        return {'message': f"{self.full_name} followed {user_to_follow.full_name}"}
-
-    def unfollow(self, user_to_unfollow_id):
-        try:
-            user_to_unfollow = User.objects.get(id=user_to_unfollow_id)
-        except User.DoesNotExist:
-            return {'error': 'User nonexistent'}
-
-        if self.following.filter(id=user_to_unfollow_id).exists():
-            self.following.remove(user_to_unfollow)
-            self.save()
-            return {'message': f"{self.full_name} unfollowed {user_to_unfollow.full_name}"}
-        else:
-            return {'error': 'You are not following this user'}
 
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -86,6 +50,22 @@ class User(AbstractBaseUser):
     objects = CustomUserManager()
     def __str__(self):
         return f"{self.full_name}"
+
+class UserFollowing(models.Model):
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user_id', 'following_user_id'], name='unique_following'),
+        ]
+
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='following')
+    following_user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='followers')
+    created = models.DateTimeField(auto_now_add=True)
+
+    def are_friends(self, user_id, friend_id):
+        return (
+            UserFollowing.objects.filter(user_id=user_id, following_user_id=friend_id).exists() and
+            UserFollowing.objects.filter(user_id=friend_id, following_user_id=user_id).exists()
+        )
 
 
 class GPX(models.Model):

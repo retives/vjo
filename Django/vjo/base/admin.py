@@ -10,4 +10,5 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User)
 admin.site.register(Activity)
 admin.site.register(ActivityImage)
+admin.site.register(UserFollowing)
 admin.site.register(GPX)
