@@ -1,43 +1,44 @@
-import React from 'react';
+import { useContext } from 'react';
 import Navbar from '../components/feed-components/Navbar';
 import Footer from '../components/feed-components/Footer';
 import HeaderImages from '../components/profile-components/HeaderImages';
+import axios from 'axios';
 import "../App.css";
 import "./styles/Profile.css";
+import { AuthContext } from '../utils/AuthProvider';
 
-const retives = {
-    name: "Serhii Tokariev",
-    imageurl: "/uploads/images/retives.jpg",
-    totalActivities: 100,
-    totalDistance: 500,
-    friendsAmount: 50,
-};
 
-function Profile() {
+const Profile = () => {
+    const { user } = useContext(AuthContext);
+    console.log("User in Profile:", user);
+    if (!user) {
+    return <div>Loading...</div>; // or a spinner
+}
+
     return (
         <div className="profile-page">
             <Navbar />
             <div className="profile-header-banner">
-                <HeaderImages user={retives} />
+                {/* <HeaderImages user={user} /> */}
                 <div className="profile-main-info">
-                    <img className="profile-avatar" src={retives.imageurl} alt={retives.name} />
+                    <img className="profile-avatar" src={user.profile_image} alt={user.full_name} />
                     <div className="profile-basic">
-                        <h1>{retives.name}</h1>
+                        <h1>{user.full_name}</h1>
                     </div>
                 </div>
             </div>
             <div className="profile-stats-row">
                 <div className="profile-stat-block">
                     <div className="profile-stat-label">Activities</div>
-                    <div className="profile-stat-value">{retives.totalActivities}</div>
+                    <div className="profile-stat-value">{/*user.totalActivities */}</div>
                 </div>
                 <div className="profile-stat-block">
                     <div className="profile-stat-label">Total Distance</div>
-                    <div className="profile-stat-value">{retives.totalDistance} km</div>
+                    <div className="profile-stat-value">{/* user.totalDistance */} km</div>
                 </div>
                 <div className="profile-stat-block">
                     <div className="profile-stat-label">Friends</div>
-                    <div className="profile-stat-value">{retives.friendsAmount}</div>
+                    <div className="profile-stat-value">{/* user.friendsAmount */}</div>
                 </div>
             </div>
             <div className="profile-achievements">
