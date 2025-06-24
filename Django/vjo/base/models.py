@@ -39,7 +39,8 @@ class User(AbstractBaseUser):
         if self == target_user:
             raise ValueError("Cannot follow yourself")
         return UserFollowing.objects.get_or_create(user=self, following_user=target_user)
-
+    def get_activity_amount(self):
+        return self.activities.all().count()
     def unfollow(self, target_user):
         UserFollowing.objects.filter(user=self, following_user=target_user).delete()
 
@@ -80,11 +81,7 @@ class UserFollowing(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.following_user}'
-    # def are_friends(self, user_id, friend_id):
-    #     return (
-    #         UserFollowing.objects.filter(user_id=user_id, following_user_id=friend_id).exists() and
-    #         UserFollowing.objects.filter(user_id=friend_id, following_user_id=user_id).exists()
-    #     )
+
 
 
 class GPX(models.Model):

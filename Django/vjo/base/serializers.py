@@ -21,16 +21,21 @@ def get_gpx_points(activity):
 class UserSerializer(ModelSerializer):
     following = SerializerMethodField()
     followers = SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ['id', 'full_name', 'email', 'profile_image', 'following', 'followers']
-
+    activity_amount = SerializerMethodField()
     def get_following(self, obj):
         return SimpleUserSerializer(obj.get_following_users(), many=True).data
 
     def get_followers(self, obj):
         return SimpleUserSerializer(obj.get_follower_users(), many=True).data
+
+    def get_activity_amount(self, obj):
+        return obj.get_activity_amount()
+    class Meta:
+        model = User
+        fields = ['id', 'full_name', 'email', 'profile_image', 'following', 'followers', 'activity_amount']
+
+
+
 
 class SimpleUserSerializer(ModelSerializer):
     class Meta:

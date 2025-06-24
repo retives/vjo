@@ -29,7 +29,10 @@ const login = (userData, access, refresh) =>{
     setUser(userData);
     setIsLoggedIn(true);
   }
-
+const update = (userData) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  }
 const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -39,7 +42,7 @@ const logout = () => {
   }
 
       return (
-          <AuthContext.Provider value={{isLoggedIn, user ,setIsLoggedIn, setUser, login, logout}}>
+          <AuthContext.Provider value={{isLoggedIn, user ,setIsLoggedIn, setUser, login, logout, update}}>
               {children}
           </AuthContext.Provider>
       )};

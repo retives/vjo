@@ -27,7 +27,7 @@ const MiniProfile = () => {
             Activities
             </Card.Header>
             <Card.Text className="mb-0">
-            {/* {user.totalActivities} */}0
+            { user.activity_amount}
             </Card.Text>
         </div>
 
