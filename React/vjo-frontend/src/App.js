@@ -24,19 +24,19 @@ function App() {
         <Router>
           <Navbar/>
           <Routes>
-            <Route path='/feed' element={<ActivityFeed/>}></Route>
-            <Route path='/signup' element={<Signup/>}></Route>
-            <Route path='/login' element={<Login/>}></Route>
-            <Route path='/friends' element={<Friends/>}></Route>
-            <Route path='/about-us' element={<AboutUs/>}></Route>
-            <Route path='/profile' element={<Profile/>}></Route>
+            <Route path='/feed' element={<ActivityFeed/>} />
+            <Route path='/signup' element={<Signup/>} />
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/friends' element={<Friends/>} />
+            <Route path='/about-us' element={<AboutUs/>} />
+            <Route path='/profile' element={<Profile/>} />
             <Route path='/add-activity' element={<AddActivity />} />
             <Route path='/' element={<ActivityFeed/>} />
             <Route path='/activity-feed' element={<ActivityFeed/>} />
           </Routes>
-                <footer className="footer">
+            <footer className="footer">
           <Footer />
-      </footer>
+            </footer>
         </Router>
 
       </AuthProvider>
