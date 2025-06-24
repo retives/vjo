@@ -28,7 +28,7 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=256, null=False)
     number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
-
+    
     def get_following_users(self):
         return User.objects.filter(followers__user=self)
 
