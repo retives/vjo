@@ -56,16 +56,24 @@ class FollowView(APIView):
 
     def post(self, request):
         current_user = request.user
+        user_serializer = UserSerializer(current_user)
+
         following_id = request.data.get("following_id")
         following_user = get_object_or_404(User, id=following_id)
+
         if not following_id:
             return Response({'error': 'The user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if str(current_user.id) == str(following_id):
             return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
         created = current_user.follow(following_user)
+        # Success
         if created:
-            return Response({'message':f'{current_user} followed {following_user}'}, status=status.HTTP_201_CREATED)
+            return Response({
+                'message':f'{current_user} followed {following_user}',
+                'user': user_serializer.data
+            },
+                status=status.HTTP_201_CREATED)
         else:
             return Response({'message':f'{current_user} already followed {following_user}'}, status=status.HTTP_200_OK)
 
@@ -76,11 +84,13 @@ class UnfollowView(APIView):
 
     def post(self, request):
         current_user = request.user
+        user_serializer = UserSerializer(current_user)
+
         target_id = request.data.get('following_id')
         target_user = get_object_or_404(User, id=target_id)
 
-        deleted, _ = UserFollowing.objects.filter(user=current_user, following_user=target_user).delete()
+        deleted = UserFollowing.objects.filter(user=current_user, following_user=target_user).delete()
         if deleted:
-            return Response({"message": "Unfollowed successfully"}, status=200)
+            return Response({"message": "Unfollowed successfully", 'user':user_serializer.data}, status=201)
         return Response({"message": "You were not following this user"}, status=400)
 

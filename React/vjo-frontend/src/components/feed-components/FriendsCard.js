@@ -7,14 +7,18 @@ import { AuthContext } from "../../utils/AuthProvider";
 const FriendsCard = ({ following_user }) => {
 
     const {user} = useContext(AuthContext);
-    const [following, setFollowing] = useState(
-        Array.isArray(user.following) && user.following.includes(following_user.id)
-    );   
+    const isFollowing = (targetId) => {
+    return user.following?.some(f => f.id === targetId);
+    };
+
+    // Usage
+    const [following, setFollowing] = useState(isFollowing(following_user.id));
+
+    const {update} = useContext(AuthContext);
     //Folowing the other user
     const handleFollow = async(e) => {
         e.preventDefault();
         // Logic to add friend goes here
-        console.log(`Request to follow ${following_user.full_name}.`);
         try{
             // Make a POST request to follow the friend
             const response = await axios.post(`http://localhost:8000/follow/`, {   
@@ -26,6 +30,7 @@ const FriendsCard = ({ following_user }) => {
                 });
                 // Confirming the sollow request
                 if (response.status === 201) {
+                    update(response.data.user);
                     setFollowing(true);
                     console.log(response.data.message);
                 }
@@ -50,8 +55,9 @@ const FriendsCard = ({ following_user }) => {
                 });
             //Confirming the unfollow request
             if (response.status === 201){
+                update(response.data.user);
                 setFollowing(false);
-                console.log(response.data.message);            
+                console.log(response.data.message);         
         }
         }catch(error){
             if (error.response){
