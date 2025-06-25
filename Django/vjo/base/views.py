@@ -19,13 +19,13 @@ class ActivityFeedView(APIView):
     def get(self, request):
         # Fetching the activities to display (in future change to access user's and their friends' activities)
         current_user = request.user
-        queryset = current_user.activities.all().order_by('-start_time')
-        activity_serializer = ActivitySerializer(queryset, many=True)
+        queryset = Activity.objects.all().order_by('-start_time')
+        all_activity_serializer = ActivitySerializer(queryset, many=True)
         # Fetching the users for friends suggestions
         suggestion = User.objects.exclude(id=current_user.id)
         user_serializer = UserSerializer(suggestion, many=True)
         data = {
-            'activities' : activity_serializer.data,
+            'activities' : all_activity_serializer.data,
             'suggestions': user_serializer.data,
         }
         return Response(data)

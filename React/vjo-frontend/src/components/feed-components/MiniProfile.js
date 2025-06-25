@@ -6,7 +6,8 @@ const MiniProfile = () => {
     const {user, loading} = useContext(AuthContext);
     if (loading) {
         return <p>Loading...</p>;
-    }
+    }   
+    console.log("MiniProfile user:", user);
     return (
     <div id = "mini-profile">
          <Card>
@@ -27,7 +28,7 @@ const MiniProfile = () => {
             Activities
             </Card.Header>
             <Card.Text className="mb-0">
-            { user.activity_amount}
+            { user.activity_amount }
             </Card.Text>
         </div>
 
@@ -36,7 +37,7 @@ const MiniProfile = () => {
             Km of activities
             </Card.Header>
             <Card.Text className="mb-0">
-            {/* {user.totalDistance} km */}0 km
+            {user.total_distance.distance__sum } km
             </Card.Text>
         </div>
 
@@ -45,8 +46,7 @@ const MiniProfile = () => {
             Friends
             </Card.Header>
             <Card.Text className="mb-0">
-            {/* {user.friendsAmount} */}
-            0
+            {user.friends.length} 
             </Card.Text>
         </div>
         </div>

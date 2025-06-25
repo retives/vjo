@@ -28,19 +28,27 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=256, null=False)
     number = models.CharField(max_length=10, blank=True, null=True)
     profile_image = models.ImageField(upload_to=upload_to_profile_images, null=True, blank=True)
-    
+
     def get_following_users(self):
         return User.objects.filter(followers__user=self)
 
     def get_follower_users(self):
         return User.objects.filter(following__following_user=self)
 
+    def get_friends(self):
+        return User.objects.filter(
+            followers__user=self,  # they follow me
+            following__following_user=self  # I follow them
+        ).distinct()
+
     def follow(self, target_user):
         if self == target_user:
             raise ValueError("Cannot follow yourself")
         return UserFollowing.objects.get_or_create(user=self, following_user=target_user)
+
     def get_activity_amount(self):
         return self.activities.all().count()
+
     def unfollow(self, target_user):
         UserFollowing.objects.filter(user=self, following_user=target_user).delete()
 
@@ -49,6 +57,9 @@ class User(AbstractBaseUser):
 
     def is_followed_by(self, target_user):
         return UserFollowing.objects.filter(user=target_user, following_user=self).exists()
+    def get_total_distance(self):
+        return self.activities.aggregate(models.Sum('distance'))
+
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

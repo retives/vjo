@@ -22,6 +22,8 @@ class UserSerializer(ModelSerializer):
     following = SerializerMethodField()
     followers = SerializerMethodField()
     activity_amount = SerializerMethodField()
+    friends = SerializerMethodField()
+    total_distance = SerializerMethodField()
     def get_following(self, obj):
         return SimpleUserSerializer(obj.get_following_users(), many=True).data
 
@@ -30,9 +32,16 @@ class UserSerializer(ModelSerializer):
 
     def get_activity_amount(self, obj):
         return obj.get_activity_amount()
+
+    def get_friends(self, obj):
+        return obj.get_friends()
+
+    def get_total_distance(self, obj):
+        return obj.get_total_distance()
+
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'email', 'profile_image', 'following', 'followers', 'activity_amount']
+        fields = ['id', 'full_name', 'email', 'profile_image', 'following', 'followers', 'activity_amount', 'friends', 'total_distance']
 
 
 
