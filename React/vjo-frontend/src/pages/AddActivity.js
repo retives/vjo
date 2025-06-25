@@ -7,7 +7,7 @@ import axios from "axios";
 function AddActivity() {
 
   const { user } = useContext(AuthContext);
-
+  const { update } = useContext(AuthContext);
   const [activityName, setActivityName] = useState("");
   const [description, setDescription] = useState("");
   const [gpxFile, setGpxFile] = useState(null);
@@ -22,7 +22,6 @@ function AddActivity() {
     formData.append("description", description);
     formData.append("gpx_file", gpxFile);
     formData.append("image", image);
-    formData.append("user", user.id);
     console.log("Form data prepared:", formData);
     try {
 
@@ -31,7 +30,7 @@ function AddActivity() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      console.log("Activity uploaded:", response.data);
+      update(response.data.user);
     } catch (error) {
       console.error("Upload failed:", error);
     }

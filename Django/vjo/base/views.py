@@ -40,12 +40,15 @@ class AddActivityView(APIView):
             gpx_file = request.FILES.get('gpx_file')
             gpx = GPX.objects.create(file=gpx_file)
 
-            user_id = request.data.get('user')
-            user = User.objects.get(id=user_id)
+            user = request.user
+            user_serializer = UserSerializer(user)
 
             activity = Activity.objects.create(name = request.data.get('activityName'), description=request.data.get('description'), user=user, gpx_file = gpx)
-
-            return Response(activity.name)
+            if activity:
+                return Response({
+                    'user':user_serializer.data,
+                    'activity':activity.name
+                })
         except(IntegrityError, ValueError, TypeError) as e:
             logging.error('Error occurred: ',e)
             return Response({'error':e})
