@@ -3,7 +3,7 @@ import "../App.css";
 import "./styles/AddActivity.css";
 import {AuthContext } from "../utils/AuthProvider";
 import axios from "axios";
-
+import {useNavigate } from 'react-router-dom';
 function AddActivity() {
 
   const { user } = useContext(AuthContext);
@@ -12,7 +12,7 @@ function AddActivity() {
   const [description, setDescription] = useState("");
   const [gpxFile, setGpxFile] = useState(null);
   const [image, setImage] = useState(null);
-
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +31,8 @@ function AddActivity() {
         },
       });
       update(response.data.user);
+      console.log("User: ", user);
+      navigate("/");
     } catch (error) {
       console.error("Upload failed:", error);
     }

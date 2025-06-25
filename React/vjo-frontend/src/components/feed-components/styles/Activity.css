@@ -30,3 +30,11 @@ button{
     border-radius: 5px;
     cursor: pointer;
 }
+.link {
+    text-decoration: none;
+    color: inherit;
+
+}
+.link:hover{
+    text-decoration: underline;
+}

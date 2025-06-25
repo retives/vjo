@@ -1,7 +1,7 @@
 import { Card, Button } from "react-bootstrap";
 import "./styles/Activity.css";
 import ActivityMap from "./ActivityMap.js";
-
+import { Link } from 'react-router-dom';
 
 const Activity = ({ activity }) => {
 
@@ -9,7 +9,7 @@ const Activity = ({ activity }) => {
     return (        
         <div className="activity-card">
             <Card>
-                <Card.Title>{activity.name}</Card.Title>
+                <Card.Title><Link className="link" to={`/activity/${activity.id}`}>{activity.name}</Link></Card.Title>
                 {/* potting the activity data on the map */}
                 <ActivityMap activity={activity} />
                 <Card.Text>

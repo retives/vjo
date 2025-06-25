@@ -11,6 +11,7 @@ import AboutUs from './pages/AboutUs.js';
 import Profile from './pages/Profile.js';
 import AddActivity from './pages/AddActivity.js';
 import {AuthProvider} from './utils/AuthProvider.js';
+import ActivityDetails from './pages/ActivityDetails.js';
 import "leaflet/dist/leaflet.css";
 
 
@@ -24,6 +25,7 @@ function App() {
         <Router>
           <Navbar/>
           <Routes>
+            <Route path="/activity/:activity_id" element={<ActivityDetails />} />
             <Route path='/feed' element={<ActivityFeed/>} />
             <Route path='/signup' element={<Signup/>} />
             <Route path='/login' element={<Login/>}/>

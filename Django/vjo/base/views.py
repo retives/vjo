@@ -45,6 +45,7 @@ class AddActivityView(APIView):
 
             activity = Activity.objects.create(name = request.data.get('activityName'), description=request.data.get('description'), user=user, gpx_file = gpx)
             if activity:
+                user.save()
                 return Response({
                     'user':user_serializer.data,
                     'activity':activity.name
@@ -97,3 +98,15 @@ class UnfollowView(APIView):
             return Response({"message": "Unfollowed successfully", 'user':user_serializer.data}, status=201)
         return Response({"message": "You were not following this user"}, status=400)
 
+class ActivityDetailsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, activity_id):
+        activity = Activity.objects.get(id = activity_id)
+        activity_serializer = ActivitySerializer(activity)
+        if not activity:
+            return Response({'error':'Error fetching the activity'})
+        return Response({
+            'activity':activity_serializer.data
+        })

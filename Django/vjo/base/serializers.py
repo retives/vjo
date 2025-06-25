@@ -34,7 +34,7 @@ class UserSerializer(ModelSerializer):
         return obj.get_activity_amount()
 
     def get_friends(self, obj):
-        return obj.get_friends()
+        return SimpleUserSerializer(obj.get_friends(), many=True).data
 
     def get_total_distance(self, obj):
         return obj.get_total_distance()

@@ -7,7 +7,6 @@ const MiniProfile = () => {
     if (loading) {
         return <p>Loading...</p>;
     }   
-    console.log("MiniProfile user:", user);
     return (
     <div id = "mini-profile">
          <Card>
