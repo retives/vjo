@@ -23,7 +23,7 @@ def get_gpx_points(activity):
         avg_lat = sum(lats) / len(lats)
         avg_long = sum(longs) / len(longs)
         centre = (avg_lat, avg_long)
-        print(centre)
+
         return {
             'points': points,
             'centre':centre
