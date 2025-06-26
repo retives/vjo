@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import ActivityMap from '../components/feed-components/ActivityMap';
 import axios from 'axios';
-
+import './styles/ActivityDetails.css';
 const ActivityDetails = () =>{
-
     const { activity_id } = useParams();
-    const [activity, setActivity] = useState(null);
+    const [activity, setActivity] = useState({});
     console.log("Activity ID:", activity_id);
     useEffect(() => {
         const getActivity = async () => {
@@ -19,30 +18,33 @@ const ActivityDetails = () =>{
                         }
                     }
                 );
-                setActivity(response.data);
-                console.log(response.data);
+                setActivity(response.data.activity);
+                console.log(activity);
+                console.log("Activity fetched successfully:", response.data);
             } catch(error) {
                 console.error("Error fetching activity:", error);
             }
         };
         getActivity();
     }, [activity_id]);
+    if (!activity) {
+        return <p>Loading...</p>;
+    }   
     return (
     <>
-    {/* <div className = "activity-details-wrapper">
+    <div className = "activity-details-wrapper">
         <div className = "name-likes">
         <h1>{activity.name}</h1>
         <span>{activity.likecount }</span>
         </div>
 
         <div className="overview">
-            <div className = "user_info">
-                
-            </div>
         </div>
 
+        
         <div className="map">
-        <ActivityMap activity={activity} />
+            <h2>Map</h2>
+            <ActivityMap activity={activity} />
         </div>
 
         <div className="stats-plot">
@@ -59,7 +61,7 @@ const ActivityDetails = () =>{
                 <h2>Plot</h2>
             </div>
         </div>
-    </div> */}
+    </div> 
     </>
     )
 };

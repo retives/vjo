@@ -2,16 +2,18 @@ import { MapContainer, TileLayer, Polyline, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 const ActivityMap = ({ activity }) => {
-  const coords = activity.plot_data
 
-  if (!coords || coords.length === 0) {
-    return <p>No GPS data available for this activity.</p>;
+  if (!activity || !activity.plot_data || !activity.plot_data.points || !activity.plot_data.centre) {
+    return <p>Loading map...</p>;
   }
+
+  const coords = activity.plot_data.points;
+  const centre = activity.plot_data.centre;
 
   return (
     <div style={{ height: "600px", width: "100%" }}>
       <MapContainer
-        center={coords[0]}
+        center={centre}
         zoom={13}
         scrollWheelZoom={false}
         dragging={false}

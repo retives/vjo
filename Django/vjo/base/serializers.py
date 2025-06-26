@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from base.models import User, Activity, GPX, UserFollowing
 from gpxpy import parse
 
+
 def get_gpx_points(activity):
     '''
     Function to parse the points from gpx file attached to it
@@ -16,7 +17,17 @@ def get_gpx_points(activity):
         points = [[point.latitude, point.longitude] for route in p.routes for point in route.points] + \
                  [[point.latitude, point.longitude] for track in p.tracks for segment in track.segments for point in
                   segment.points]
-        return points
+        edge_points = [min(points, key=lambda x: x[0]), max(points, key=lambda x: x[0]), min(points, key=lambda x: x[1]), max(points, key=lambda x: x[1])]
+        lats, longs = zip(*edge_points)
+
+        avg_lat = sum(lats) / len(lats)
+        avg_long = sum(longs) / len(longs)
+        centre = (avg_lat, avg_long)
+        print(centre)
+        return {
+            'points': points,
+            'centre':centre
+        }
 
 class UserSerializer(ModelSerializer):
     following = SerializerMethodField()
