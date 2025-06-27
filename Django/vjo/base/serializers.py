@@ -1,6 +1,12 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from base.models import User, Activity, GPX, UserFollowing
-from gpxpy import parse
+from gpxpy import parse, gpx
+import gpxpy
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+import base64
+from io import BytesIO
 
 
 def get_gpx_points(activity):
@@ -28,6 +34,39 @@ def get_gpx_points(activity):
             'points': points,
             'centre':centre
         }
+
+def get_speeds(activity):
+    with open ('media/gpx/'+activity.gpx_file.filename()) as f:
+        gpx = gpxpy.parse(f)
+        speeds = []
+        times = []
+        for track in gpx.tracks:
+            for segment in track.segments:
+                for i in range(len(segment.points) - 1):
+                    p1 = segment.points[i]
+                    p2 = segment.points[i + 1]
+
+                    speed_mps = p1.speed_between(p2)
+
+                    speed_kmh = speed_mps * 3.6 if speed_mps is not None else 0
+
+                    speeds.append(speed_kmh)
+                    times.append(p2.time)
+        speed_df = pd.DataFrame({'speed': speeds, 'time': times})
+        speed_df['time elapsed'] = (speed_df['time'] - speed_df['time'].iloc[0]).dt.total_seconds() / 60
+        print(speed_df)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(speed_df['time elapsed'], speed_df['speed'])
+        plt.xlabel('Time elapsed (minutes)')
+        plt.ylabel('Speed (km/h)')
+        plt.title('Speed over time')
+        buf = BytesIO()
+        buf.seek(0)
+        if not os.path.exists(f'media/plots/{activity.id}'):
+            plt.savefig(buf, format='png')
+        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        return f"data:image/png;base64,{image_base64}"
 
 class UserSerializer(ModelSerializer):
     following = SerializerMethodField()
@@ -67,6 +106,7 @@ from rest_framework import serializers
 class ActivitySerializer(serializers.ModelSerializer):
     plot_data = serializers.SerializerMethodField()
     user_fullname = serializers.SerializerMethodField()
+    speed_plot = serializers.SerializerMethodField()
     class Meta:
         model = Activity
         fields = '__all__'
@@ -74,6 +114,9 @@ class ActivitySerializer(serializers.ModelSerializer):
         return get_gpx_points(obj)
     def get_user_fullname(self, obj):
         return obj.user.full_name
+    def get_speed_plot(self, obj):
+        return get_speeds(obj)
+
 class GPXSerializer(ModelSerializer):
     formatted_pace = SerializerMethodField()
 

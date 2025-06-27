@@ -3,6 +3,9 @@ import {useParams} from 'react-router-dom';
 import ActivityMap from '../components/feed-components/ActivityMap';
 import axios from 'axios';
 import './styles/ActivityDetails.css';
+
+
+
 const ActivityDetails = () =>{
     const { activity_id } = useParams();
     const [activity, setActivity] = useState({});
@@ -69,7 +72,7 @@ const ActivityDetails = () =>{
   <hr />
   <div className="panel panel-default p-3">
     <h2>Plot</h2>
-    {/* Plot content here */}
+    {activity.speed_plot}
   </div>
 </div>
   </div>
