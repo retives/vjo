@@ -70,9 +70,9 @@ const ActivityDetails = () =>{
     </div>
   </div>
   <hr />
-  <div className="panel panel-default p-3">
+  <div className="panel panel-default">
     <h2>Plot</h2>
-    {activity.speed_plot}
+    <img src = {activity.speed_plot} alt = 'Speed_plot_alt_text' className='img-fluid'/>
   </div>
 </div>
   </div>

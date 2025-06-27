@@ -104,7 +104,7 @@ class ActivityDetailsView(APIView):
 
     def get(self, request, activity_id):
         activity = Activity.objects.get(id = activity_id)
-        activity_serializer = ActivitySerializer(activity)
+        activity_serializer = DetailedActivitySerializer(activity)
         if not activity:
             return Response({'error':'Error fetching the activity'})
         return Response({

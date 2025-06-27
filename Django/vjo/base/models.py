@@ -1,15 +1,23 @@
-
 import os
 import uuid
-
 import ezgpx
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from datetime import datetime, timedelta, time
 from base.managers import CustomUserManager
-from django.core.exceptions import ObjectDoesNotExist
+from gpxpy import parse, gpx
+import gpxpy
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+import os
+import base64
+from io import BytesIO
+from scipy.stats import zscore
+import numpy as np
 
+matplotlib.use('Agg')
 def upload_to_profile_images(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f"{uuid.uuid4()}.{ext}"
@@ -151,6 +159,82 @@ class Activity(models.Model):
         minutes = int(self.avg_pace)
         seconds = int((self.avg_pace - minutes) * 60)
         return f"{minutes}:{seconds:02d} min/km"
+
+    def get_gpx_points(self):
+        '''
+        Function to parse the points from gpx file attached to it
+
+        Args:
+            activity( base.Activity ): Activity type
+        Return:
+            points( array[(latitude, longitude)...] ): each point of the activity required to plot it on the map
+        '''
+        with open('media/gpx/' + self.gpx_file.filename()) as f:
+            p = parse(f)
+            points = [[point.latitude, point.longitude] for route in p.routes for point in route.points] + \
+                     [[point.latitude, point.longitude] for track in p.tracks for segment in track.segments for point in
+                      segment.points]
+            edge_points = [min(points, key=lambda x: x[0]), max(points, key=lambda x: x[0]),
+                           min(points, key=lambda x: x[1]), max(points, key=lambda x: x[1])]
+            lats, longs = zip(*edge_points)
+
+            avg_lat = sum(lats) / len(lats)
+            avg_long = sum(longs) / len(longs)
+            centre = (avg_lat, avg_long)
+
+            return {
+                'points': points,
+                'centre': centre
+            }
+
+    def get_speeds(self):
+        with open('media/gpx/' + self.gpx_file.filename()) as f:
+            gpx = gpxpy.parse(f)
+            speeds = []
+            times = []
+            for track in gpx.tracks:
+                for segment in track.segments:
+                    for i in range(len(segment.points) - 1):
+                        p1 = segment.points[i]
+                        p2 = segment.points[i + 1]
+
+                        speed_mps = p1.speed_between(p2)
+
+                        speed_kmh = speed_mps * 3.6 if speed_mps is not None else 0
+
+                        speeds.append(speed_kmh)
+                        times.append(p2.time)
+            speed_df = pd.DataFrame({'speed': speeds, 'time': times})
+            z_scores = zscore(speed_df['speed'])
+
+            threshold = 3
+            non_outliers = abs(z_scores) < threshold
+            mean_non_outliers = speed_df['speed'][non_outliers].mean()
+            speed_df.loc[~non_outliers, 'speed'] = mean_non_outliers
+            print(speed_df)
+            speed_df['time elapsed'] = (speed_df['time'] - speed_df['time'].iloc[0]).dt.total_seconds() / 60
+
+            plt.figure(figsize=(10, 6))
+            plt.plot(speed_df['time elapsed'], speed_df['speed'])
+            plt.xlabel('Time elapsed (minutes)')
+            plt.ylabel('Speed (km/h)')
+            plt.title('Speed over time')
+
+            # Saving to the file
+
+            # if not os.path.exists(f'media/plots/{activity.id}'):
+            #     plt.savefig(f'media/plots/{activity.id}')
+            #
+            # with open(f"data:image/png;base64,{activity.id}") as image:
+            #     return image
+            #         Saving to the buffer
+            buf = BytesIO()
+            plt.savefig(buf, format='png')
+            buf.seek(0)
+
+            # Encode as base64
+            image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+            return f"data:image/png;base64,{image_base64}"
 
 class ActivityImage(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
