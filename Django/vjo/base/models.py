@@ -1,12 +1,11 @@
-import os
 import uuid
 import ezgpx
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
-from datetime import datetime, timedelta, time
+from datetime import timedelta
 from base.managers import CustomUserManager
-from gpxpy import parse, gpx
+from gpxpy import parse
 import gpxpy
 import pandas as pd
 import matplotlib
@@ -15,7 +14,6 @@ import os
 import base64
 from io import BytesIO
 from scipy.stats import zscore
-import numpy as np
 
 matplotlib.use('Agg')
 def upload_to_profile_images(instance, filename):
@@ -45,8 +43,8 @@ class User(AbstractBaseUser):
 
     def get_friends(self):
         return User.objects.filter(
-            followers__user=self,  # they follow me
-            following__following_user=self  # I follow them
+            followers__user=self,
+            following__following_user=self
         ).distinct()
 
     def follow(self, target_user):

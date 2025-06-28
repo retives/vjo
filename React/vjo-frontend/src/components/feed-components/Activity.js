@@ -11,7 +11,7 @@ const Activity = ({ activity }) => {
             <Card>
                 <Card.Title><Link className="link" to={`/activity/${activity.id}`}>{activity.name}</Link></Card.Title>
                 {/* potting the activity data on the map */}
-                <ActivityMap activity={activity} />
+                <ActivityMap activity={activity} isZoomable={false} isDraggable={false} isScrollZoomable={false} />
                 <Card.Text>
 
                     Athlete: {activity.user_fullname}<br />

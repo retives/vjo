@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Polyline, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-const ActivityMap = ({ activity }) => {
+const ActivityMap = ({ activity, isZoomable, isDraggable, isScrollZoomable }) => {
 
   if (!activity || !activity.plot_data || !activity.plot_data.points || !activity.plot_data.centre) {
     return <p>Loading map...</p>;
@@ -15,11 +15,11 @@ const ActivityMap = ({ activity }) => {
       <MapContainer
         center={centre}
         zoom={13}
-        scrollWheelZoom={false}
-        dragging={false}
+        scrollWheelZoom={isScrollZoomable}
+        dragging={isDraggable}
         doubleClickZoom={false}
-        zoomControl={false}
-        touchZoom={false}
+        zoomControl={isZoomable}
+        touchZoom={isZoomable}
         keyboard={false}
         preferCanvas={true} 
         zoomAnimation={false} 
