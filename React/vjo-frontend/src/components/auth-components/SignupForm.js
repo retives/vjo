@@ -44,49 +44,67 @@ function SignupForm() {
   
     return (
       <div className="signup-form">
-        <h2>Sign up</h2> 
-        
-        <div className="alternative-signup">
-          <button className="google-signup-button">
+        <div className='signup-text mb-4'>
+          <h2>Sign up</h2> 
+        </div>
+        {/* Alternative login buttons */}
+      <div className="alternative-login mb-3 d-flex gap-2 justify-content-flex">
+        <div className = "button-wrapper mb-4 w-100">
+          <button className="google-login-button">
             <img src="/images/google-icon.png" alt="Google Icon" className='icon'/>
-            Sign up with Google
+            Log in with Google
           </button>
-          <button className = "Apple-signup-button">
+        </div>
+        <div className='button-wrapper mb-4 w-100'>
+          <button className = "Apple-login-button">
             <img src="/images/apple-icon.png" alt="Apple Icon" className='icon'/>
-            Sign up with Apple
+            Log in with Apple
           </button>
+          </div>
         </div>
       {/* Signup form */}
         {/* Email field */}
-        <div className="input-wrapper">
-          <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-        </div>
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">Email</label>
+        <input
+          type="email"
+          className="form-control"
+          id="email"
+          placeholder="Enter Email..."
+          aria-label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
         {/* Name field */}
-        <div className="input-wrapper">
-          <label>Full Name</label>
-          <input
-            type="text"
-            value={full_name}
-            onChange={(e) => setFullName(e.target.value)}
-          />
-        </div>
+         <div className="mb-3">
+        <label htmlFor="full-name" className="form-label">Full Name</label>
+        <input
+          type="text"
+          className="form-control"
+          id="fullname"
+          placeholder="Full Name..."
+          aria-label="FullName"
+          value={full_name}
+          onChange={(e) => setFullName(e.target.value)}
+        />
+      </div>
         {/* Password field */}
-        <div className="input-wrapper">
-          <label>Password</label>
+       <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
+            className="form-control"
+            id="password"
+            placeholder="Enter Password..."
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            />
-        </div>
-
-        <button onClick={handleSubmit}>Sign up</button>
-
+          />
+      </div>
+      {/* Submit button  */}
+      <button type="submit" className = "w-50" onClick={handleSubmit}>
+        Sign Up
+      </button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
       </div>

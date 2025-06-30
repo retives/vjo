@@ -39,10 +39,14 @@ function LoginForm() {
 }
 
   return (
-    <div className='login-form'>
-      <h2>Log in</h2>
-
-      <div className="alternative-login">
+    // Wrapper
+  <form className = "login-form">
+      {/* Label */}
+      <div className = "login-text mb-4">
+        <h2>Log in</h2>
+      </div>
+      {/* Alternative login buttons */}
+      <div className="alternative-login mb-3 d-flex gap-2">
           <button className="google-login-button">
             <img src="/images/google-icon.png" alt="Google Icon" className='icon'/>
             Log in with Google
@@ -53,26 +57,38 @@ function LoginForm() {
           </button>
         </div>
 
-      <div className='input-wrapper'>
-        <label>Email</label>
+      {/* Email input */}  
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">Email</label>
         <input
           type="email"
+          className="form-control"
+          id="email"
+          placeholder="Enter Email..."
+          aria-label="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)} />
+          onChange={(e) => setEmail(e.target.value)}
+        />
+    </div>
+      {/* Password input */}
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            placeholder="Enter Password..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
       </div>
-
-      <div className='input-wrapper'>
-      <label>Password</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)} />
-        </div>
-
-      <button onClick={handleSubmit}>Log in</button>
+      {/* Submit button  */}
+      <button type="submit"  onClick={handleSubmit}>
+        Log in
+    </button>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+    </form>
   );
 }
 
