@@ -21,11 +21,11 @@ const ActivityFeed = () => {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
               'Content-Type': 'application/json'
-            }
+            } 
           });
           setActivities(response.data.activities);
           setFriendSuggestions(response.data.suggestions);
-
+          console.log(response.data.activities)
         } catch (e) {
           console.error("Error fetching activities:", e);
         }

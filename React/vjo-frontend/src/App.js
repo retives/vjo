@@ -31,7 +31,7 @@ function App() {
             <Route path='/login' element={<Login/>}/>
             <Route path='/friends' element={<Friends/>} />
             <Route path='/about-us' element={<AboutUs/>} />
-            <Route path='/profile' element={<Profile/>} />
+            <Route path='/accounts/:id' element={<Profile/>} />
             <Route path='/add-activity' element={<AddActivity />} />
             <Route path='/' element={<ActivityFeed/>} />
             <Route path='/activity-feed' element={<ActivityFeed/>} />

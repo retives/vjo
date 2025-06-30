@@ -74,8 +74,8 @@ class LogoutView(APIView):
             return Response (status = status.HTTP_400_BAD_REQUEST)
 
 class UserView(APIView):
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, user_id):
         current_user = User.objects.get(id=user_id)
         serializer = UserSerializer(current_user)

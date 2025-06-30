@@ -30,9 +30,9 @@ const FriendsCard = ({ following_user }) => {
                 });
                 // Confirming the sollow request
                 if (response.status === 201) {
-                    update(response.data.user);
                     setFollowing(true);
                     console.log(response.data.message);
+                    update(response.data.user);
                 }
                 // Handling the error if the request fails
         } catch (error) {
@@ -55,8 +55,8 @@ const FriendsCard = ({ following_user }) => {
                 });
             //Confirming the unfollow request
             if (response.status === 201){
-                update(response.data.user);
                 setFollowing(false);
+                update(response.data.user);
                 console.log(response.data.message);         
         }
         }catch(error){

@@ -9,7 +9,7 @@ import { AuthContext } from '../utils/AuthProvider';
 const ActivityDetails = () =>{
     const { activity_id } = useParams();
     const [activity, setActivity] = useState({});
-    const {user, loading } = useContext(AuthContext)
+
     console.log("Activity ID:", activity_id);
     useEffect(() => {
         const getActivity = async () => {
@@ -30,10 +30,12 @@ const ActivityDetails = () =>{
             }
         };
         getActivity();
+        
     }, [activity_id]);
-    if (!activity) {
+    if (!activity || !activity.simple_user) {
         return <p>Loading...</p>;
     }   
+    const user = activity.simple_user
     return (
 
 <div className="activity-details-container" style={{ marginTop: '50px' }}>
@@ -53,7 +55,7 @@ const ActivityDetails = () =>{
             style={{ width: 60, height: 60, objectFit: "cover" }}
           />
           <div>
-            <h5 className="mb-0">{activity.user?.name}</h5>
+            <h5 className="mb-0">{user.full_name}</h5>
             <small>
               {activity.start_time
                 ? new Date(activity.start_time).toLocaleString()

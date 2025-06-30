@@ -2,6 +2,7 @@
     border-radius: 10px;
     width: 600px; 
     margin-bottom: 20px;
+    padding: 10px;
 }
 .activity-image {
     width: 100%;
@@ -37,4 +38,17 @@ button{
 }
 .link:hover{
     text-decoration: underline;
+}
+.activity-card .card-text {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.activity-card .card-title{
+    font-size: 1.5rem;
+
+}
+.info, .activity-card .card-text, .activity-card .card-title {
+    text-align: left !important;
 }

@@ -24,6 +24,7 @@ class ActivityFeedView(APIView):
         # Fetching the users for friends suggestions
         suggestion = User.objects.exclude(id=current_user.id)
         user_serializer = UserSerializer(suggestion, many=True)
+
         data = {
             'activities' : all_activity_serializer.data,
             'suggestions': user_serializer.data,

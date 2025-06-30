@@ -34,32 +34,32 @@ class SimpleUserSerializer(ModelSerializer):
 from rest_framework import serializers
 
 class ActivitySerializer(serializers.ModelSerializer):
-    user_fullname = serializers.SerializerMethodField()
+    simple_user = SimpleUserSerializer(source = 'user', read_only=True)
     plot_data = serializers.SerializerMethodField()
+
     class Meta:
         model = Activity
-        fields = ['id', 'name', 'distance', 'start_time', 'end_time', 'user_fullname', 'plot_data']
+        fields = ['id', 'name', 'distance', 'start_time', 'end_time', 'simple_user', 'plot_data', 'duration']
     def get_plot_data(self, obj):
         return obj.get_gpx_points()
-    def get_user_fullname(self, obj):
-        return obj.user.full_name
+    def get_user(self, obj):
+        return UserSerializer(obj.user).data
 class DetailedActivitySerializer(serializers.ModelSerializer):
     speed_plot = serializers.SerializerMethodField()
-    user_fullname = serializers.SerializerMethodField()
+    simple_user = SimpleUserSerializer(source = 'user', read_only=True)
     plot_data = serializers.SerializerMethodField()
     class Meta:
         model = Activity
         fields = ActivitySerializer.Meta.fields + [
             'description', 'ascent', 'descent',
             'avg_speed', 'max_speed', 'min_speed', 'avg_pace',
-            'gpx_file', 'user', 'plot_data', 'speed_plot',
+            'gpx_file', 'simple_user', 'plot_data', 'speed_plot',
         ]
     def get_speed_plot(self, obj):
         return obj.get_speeds()
     def get_plot_data(self, obj):
         return obj.get_gpx_points()
-    def get_user_fullname(self, obj):
-        return obj.user.full_name
+
 class GPXSerializer(ModelSerializer):
     formatted_pace = SerializerMethodField()
 
