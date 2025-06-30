@@ -72,3 +72,11 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response (status = status.HTTP_400_BAD_REQUEST)
+
+class UserView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    def get(self, request, user_id):
+        current_user = User.objects.get(id=user_id)
+        serializer = UserSerializer(current_user)
+        return Response(serializer.data)
