@@ -1,0 +1,16 @@
+.stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0; 
+  
+}
+
+.static-text {
+  text-align: left;
+
+}
+
+.dynamic-text {
+  text-align: right;
+  background-color: #ececec   ;
+}

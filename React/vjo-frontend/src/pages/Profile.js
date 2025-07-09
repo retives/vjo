@@ -7,7 +7,8 @@ import "../App.css";
 import "./styles/Profile.css";
 import { AuthContext } from '../utils/AuthProvider';
 import { useParams } from 'react-router-dom';
-
+import StatsList from '../components/profile-components/StatsList';
+import ActivitySection from '../components/feed-components/ActivitySection.js';
 
 const Profile = () => {
     const { id } = useParams();
@@ -72,6 +73,12 @@ return (
                 <div className="profile-stat-label">Friends</div>
                 <div className="profile-stat-value">{user.friends.length}</div>
             </div>
+        </div>
+        <div>
+            <ActivitySection />
+        </div>
+        <div>
+            <StatsList data = {``}/>
         </div>
         <Footer />
     </div>

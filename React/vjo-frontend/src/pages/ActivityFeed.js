@@ -6,7 +6,7 @@ import { AuthContext } from "../utils/AuthProvider";
 import { useState, useEffect, useContext} from 'react';
 import "../App.css";
 import "./styles/ActivityFeed.css";
-
+import ActivitySection from '../components/feed-components/ActivitySection.js'
 const ActivityFeed = () => {
 
   const [activities, setActivities] = useState([]);
@@ -46,19 +46,7 @@ const ActivityFeed = () => {
       </div>
         
       <div className="middle-section">
-        {Array.isArray(activities) && activities.length !== 0 ? (
-          activities.map((activity) => (
-          <Activity
-            key={activity.id}
-            activity={activity}
-          />
-        ))
-        ) : (
-          <div>
-            <p>No activities found.</p>
-          </div>
-          
-        )}
+        <ActivitySection activities={activities}/>
       </div>
 
 
