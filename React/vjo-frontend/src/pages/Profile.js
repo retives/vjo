@@ -13,6 +13,7 @@ import ActivitySection from '../components/feed-components/ActivitySection.js';
 const Profile = () => {
     const { id } = useParams();
     const [user, setUser] = useState(null)
+    const [activities, setActivities] = useState([])
     const [error, setError] = useState(null)
     useEffect (() => {
         // Fetching the user
@@ -27,7 +28,8 @@ const Profile = () => {
                 }
             )
             if (response.status === 200){
-                setUser(response.data)
+                setUser(response.data.user)
+                setActivities(response.data.activities)
                 console.log('User loaded successfully')
             }
             if ((await response).status=== 401){
@@ -74,13 +76,15 @@ return (
                 <div className="profile-stat-value">{user.friends.length}</div>
             </div>
         </div>
-        <div>
-            <ActivitySection />
+        <div className='bottom-section'>
+            <div className='activity-section-wrapper'>
+                <ActivitySection activities={activities}/>
+            </div>
+            <div className='statlist-wrapper'>
+                <StatsList data = {``}/>
+            </div>
         </div>
-        <div>
-            <StatsList data = {``}/>
-        </div>
-        <Footer />
+        
     </div>
 );
 }

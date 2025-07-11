@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from base.models import User
 
 
-from base.serializers import UserSerializer
+from base.serializers import UserSerializer, ActivitySerializer
 
 
 # Create your views here.
@@ -78,9 +78,12 @@ class UserView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, user_id):
         current_user = User.objects.get(id=user_id)
-
+        user_activities = current_user.activities.all()
+        user_serializer = UserSerializer(current_user)
+        activity_serializer = ActivitySerializer(user_activities, many=True)
         data = {
-                
+            "user":user_serializer.data,
+            "activities": activity_serializer.data,
         }
-        serializer = UserSerializer(current_user)
-        return Response(serializer.data)
+
+        return Response(data)

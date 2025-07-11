@@ -149,3 +149,15 @@
     font-size: 0.95rem;
     margin-left: 8px;
 }
+.bottom-section{
+    width: 100%;
+    display:flex;
+}
+.activity-section-wrapper{
+    width:70%;
+    float:right
+}
+.statslist-wrapper{
+    width:30%;
+
+}
