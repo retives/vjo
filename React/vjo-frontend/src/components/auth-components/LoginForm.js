@@ -40,7 +40,7 @@ function LoginForm() {
 
   return (
     // Wrapper
-  <form className = "login-form">
+  <form className = "login-form" onSubmit={ handleSubmit }>
       {/* Label */}
       <div className = "login-text mb-4">
         <h2>Log in</h2>
@@ -72,9 +72,9 @@ function LoginForm() {
     </div>
       {/* Password input */}
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label" id = "password-field">Password</label>
           <input
-            type="password"
+            type="input"
             className="form-control"
             id="password"
             placeholder="Enter Password..."
