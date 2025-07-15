@@ -3,13 +3,36 @@ import "./styles/Activity.css";
 import ActivityMap from "./ActivityMap.js";
 import { Link } from 'react-router-dom';
 import { AuthContext } from "../../utils/AuthProvider.js";
-import { useContext } from 'react'
-
+import { act, useContext, useEffect } from 'react'
+import axios from "axios";
 const Activity = ({ activity }) => {
     
+    const {user, loading} = useContext(AuthContext);
     const user_id = activity.simple_user?.id
     console.log('simple_user:', activity.simple_user);
+    console.log('activity ',activity);
 
+    const deleteActivity = async () => {
+        try {
+            const response = await axios.delete(
+                `http://localhost:8000/activity/delete/`,  // ✅ fixed URL
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    data: { activity_id: activity.id }, // ✅ body goes in `data`
+                }
+            );
+            console.log("Deleted:", response.data.message);
+            user.update(response.data.user)
+            window.location.reload();
+            // Optionally: trigger refresh, or remove activity from UI
+        } catch (error) {
+            console.error("Error deleting activity:", error);
+        }
+
+    }
     console.log(user_id )
     return (
         <div className="activity-card">
@@ -39,6 +62,9 @@ const Activity = ({ activity }) => {
                                     <Link className="link" to={`/accounts/${user_id}/`}>
                                         {activity.simple_user.full_name}
                                     </Link>
+                                    <div>
+                                        <button type="submit" onClick={deleteActivity}>Delete activity</button>
+                                    </div>
                                 </Card.Title>
                                 <small className="text-muted">
                                     {activity.start_time}

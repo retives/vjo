@@ -7,6 +7,8 @@ from rest_framework import status
 import logging
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
+
+import base.models
 from .models import UserFollowing
 from .serializers import *
 
@@ -111,3 +113,16 @@ class ActivityDetailsView(APIView):
         return Response({
             'activity':activity_serializer.data
         })
+
+class RemoveActivityView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def delete(self, request):
+        activity_id = request.data.get('activity_id')
+        activity = get_object_or_404(base.models.Activity, id = activity_id)
+        print(activity)
+        activity.delete()
+        current_user = request.user
+        user_serializer = UserSerializer(current_user)
+        return Response({'message':'Activity deleted successfully',
+                         'user':user_serializer.data})

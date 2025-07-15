@@ -87,3 +87,12 @@ class UserView(APIView):
         }
 
         return Response(data)
+
+class SettingsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        current_user = request.user
+        user_serializer = UserSerializer(current_user)
+        return Response({"user":user_serializer.data})
+

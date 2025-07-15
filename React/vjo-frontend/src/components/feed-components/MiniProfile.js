@@ -6,6 +6,7 @@ const MiniProfile = () => {
     const {user, loading} = useContext(AuthContext);
     if (loading) {
         return <p>Loading...</p>;
+
     }   
     return (
     <div id = "mini-profile">

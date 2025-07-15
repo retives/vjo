@@ -8,5 +8,6 @@ urlpatterns = [
     path('add-activity/', AddActivityView.as_view(), name='add-activity'),
     path('follow/', FollowView.as_view(), name='follow'),
     path('unfollow/', UnfollowView.as_view(), name='unfollow'),
-    path('activity/<uuid:activity_id>/', ActivityDetailsView.as_view(), name = 'activity-details')
+    path('activity/<uuid:activity_id>/', ActivityDetailsView.as_view(), name = 'activity-details'),
+    path('activity/delete/', RemoveActivityView.as_view(), name = 'remove-activity'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

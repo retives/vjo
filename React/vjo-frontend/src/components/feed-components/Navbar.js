@@ -62,7 +62,7 @@ const NavbarMain = () => {
                 // If user is logged in
                 <> 
                 
-                  <Nav.Link href="/profile">{user.full_name}</Nav.Link>
+                  <Nav.Link href={`/accounts/${user.id}`}>{user.full_name}</Nav.Link>
                   {/* <Nav.Link href="/notifications">Notifications</Nav.Link> */}
                   <Nav.Link href="/friends">Friends</Nav.Link>
                   <Nav.Link href="/add-activity">Add Activity</Nav.Link>
