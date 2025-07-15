@@ -25,7 +25,7 @@ function LoginForm() {
       },
     });
     login(response.data.user, response.data.access, response.data.refresh);
-    navigate('/');
+    navigate(-1);
   } catch (error) {
     if (error.response && error.response.status === 500) {
       console.error('Server error:', error.response.status);

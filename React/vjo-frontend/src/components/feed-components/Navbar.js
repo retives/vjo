@@ -61,13 +61,16 @@ const NavbarMain = () => {
               {isLoggedIn ? (
                 // If user is logged in
                 <> 
-                
-                  <Nav.Link href={`/accounts/${user.id}`}>{user.full_name}</Nav.Link>
+                  <NavDropdown title={user.full_name}>
+                    <NavDropdown.Item href={`/accounts/${user.id}`}>Profile</NavDropdown.Item>
+                    <NavDropdown.Item href={`/accounts/settings/${user.id}`}>Settings</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+                  </NavDropdown>
+                  
                   {/* <Nav.Link href="/notifications">Notifications</Nav.Link> */}
                   <Nav.Link href="/friends">Friends</Nav.Link>
                   <Nav.Link href="/add-activity">Add Activity</Nav.Link>
                   <Nav.Link href="/about-us">About</Nav.Link>
-                  <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                 </>
               ) : (
                 // If user is NOT logged in
