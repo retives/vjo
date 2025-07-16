@@ -40,6 +40,7 @@ function SignupForm() {
           setError(error.response.data.detail || 'An error occurred. Please try again.');
         }
       }
+      navigate('/confirm-email');
     };
   
     return (
@@ -106,7 +107,7 @@ function SignupForm() {
         Sign Up
       </button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-
+      
       </div>
     );
   }

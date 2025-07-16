@@ -12,6 +12,7 @@ import Profile from './pages/Profile.js';
 import AddActivity from './pages/AddActivity.js';
 import {AuthProvider} from './utils/AuthProvider.js';
 import ActivityDetails from './pages/ActivityDetails.js';
+import ConfirmEmail from './pages/ConfirmEmail.js'
 import "leaflet/dist/leaflet.css";
 
 
@@ -35,6 +36,7 @@ function App() {
             <Route path='/add-activity' element={<AddActivity />} />
             <Route path='/' element={<ActivityFeed/>} />
             <Route path='/activity-feed' element={<ActivityFeed/>} />
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
           </Routes>
             <footer className="footer">
           <Footer />
