@@ -34,10 +34,10 @@ const MiniProfile = () => {
 
         <div className="stat-column">
             <Card.Header className="p-0 border-0 bg-transparent">
-            Km of activities
+            Total Distance
             </Card.Header>
             <Card.Text className="mb-0">
-            {user.total_distance.distance__sum } km
+            {user.total_distance.distance__sum || 0} km
             </Card.Text>
         </div>
 
