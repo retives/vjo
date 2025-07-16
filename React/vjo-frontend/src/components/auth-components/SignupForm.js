@@ -32,15 +32,13 @@ function SignupForm() {
       localStorage.setItem('refresh_token', response.data.refresh);
       login(response.data.access);
       // Redirecting the user to the home page after successful signup
-
-      navigate('/');
       }catch (error) {
         if (error.response){
           console.error('Server error:', error.response.status);
           setError(error.response.data.detail || 'An error occurred. Please try again.');
         }
       }
-      navigate('/confirm-email');
+      // navigate('/confirm-email');
     };
   
     return (

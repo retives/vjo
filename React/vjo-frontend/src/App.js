@@ -23,8 +23,9 @@ function App() {
     <div className="App">
       <AuthProvider>
       
-        <Router>
+        <Router >
           <Navbar/>
+          <div className='main'>
           <Routes>
             <Route path="/activity/:activity_id" element={<ActivityDetails />} />
             <Route path='/feed' element={<ActivityFeed/>} />
@@ -38,6 +39,7 @@ function App() {
             <Route path='/activity-feed' element={<ActivityFeed/>} />
             <Route path="/confirm-email" element={<ConfirmEmail />} />
           </Routes>
+          </div>
             <footer className="footer">
           <Footer />
             </footer>

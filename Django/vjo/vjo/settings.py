@@ -53,7 +53,7 @@ INSTALLED_APPS = [
 ]
 
 # Email config
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 8025
 EMAIL_HOST_PASSWORD = ''

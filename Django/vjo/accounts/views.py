@@ -20,7 +20,7 @@ def send_confirmation_email(user):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = token_generator.make_token(user)
 
-    confirmation_link = f"http://localhost:8000/confirm-email/{uid}/{token}/"
+    confirmation_link = f"http://localhost:3000/accounts/activate/{uid}/{token}/"
 
     send_mail(
         subject="Confirm your registration at Vjo.",
@@ -37,27 +37,25 @@ class LoginView(APIView):
     def get(self, request):
         return Response()
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
-        user = authenticate(email=email, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            serializer = UserSerializer(user)
-            content = {
-                'access': str(refresh.access_token),
-                'refresh': str(refresh),
-                "user":serializer.data
-            }
-            return Response(content)
-        else:
-            return Response({'error': 'Your username or password is wrong.'}, status = 401)
+            email = request.data.get('email')
+            password = request.data.get('password')
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                serializer = UserSerializer(user)
+                content = {
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                    "user":serializer.data
+                }
+                return Response(content)
+            else:
+                return Response({'error': 'Your username or password is wrong.'}, status = 401)
 
 class SignupView(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]
-
     def post(self, request):
-
         try:
             email = request.data.get('email')
             full_name = request.data.get('full_name')
@@ -72,29 +70,19 @@ class SignupView(APIView):
                     'refresh':str(refresh),
                     'user':serializer.data
                 }
-
-                user.is_active = False
+                # Commented until i figure out how to make it work
+                # user.is_active = False
+                # user.save()
+                # send_confirmation_email(user)
                 return Response(content)
         except(IntegrityError):
                 return Response({'error': 'The email has already been taken!'}, status=422)
 
-def confirm_email(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (User.DoesNotExist, ValueError, TypeError):
-        user = None
 
-    if user and token_generator.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return Response("Email confirmed. You can now log in.")
-    else:
-        return Response("Invalid or expired confirmation link.")
 
 class ActivateUserView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = [AllowAny]
     def get(self, request, uidb64, token):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
