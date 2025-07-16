@@ -13,8 +13,13 @@ function LoginForm() {
   const { login } = useContext(AuthContext);
   // Function to handle form submission
   const handleSubmit = async(e) => {
+    setError('')
     e.preventDefault();
     try{
+      if (!email || !password){
+      setError('The fields can\'t be empty!')
+      return false
+    }
     //Sending the data to the server
     const response = await axios.post('http://localhost:8000/accounts/login/', {
       email,
@@ -66,6 +71,7 @@ function LoginForm() {
           id="email"
           placeholder="Enter Email..."
           aria-label="Email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -74,11 +80,12 @@ function LoginForm() {
         <div className="mb-3">
           <label htmlFor="password" className="form-label" id = "password-field">Password</label>
           <input
-            type="input"
+            type="password"
             className="form-control"
             id="password"
             placeholder="Enter Password..."
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
       </div>
