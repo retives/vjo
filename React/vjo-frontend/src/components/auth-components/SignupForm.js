@@ -12,12 +12,26 @@ function SignupForm() {
     const [email, setEmail] = useState('');
     const [full_name, setFullName] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('')
     const [error, setError] = useState(null);
     // Function to handle form submission
     const handleSubmit = async(e) => {
+      setError('')
       e.preventDefault();
       // Sending the request to the server
       try{
+        if (!email && !password && !full_name){
+          setError('Fill in the reuired fields')
+          
+          return false
+        }
+        if (password !== repeatPassword){
+          setError('Passwords are not equal!')
+          var passInput = document.getElementById('password')
+          passInput.focus()
+          return false
+        }
+
         const response = await axios.post('http://localhost:8000/accounts/signup/', {
           email,
           full_name,
@@ -98,6 +112,15 @@ function SignupForm() {
             placeholder="Enter Password..."
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+          <label htmlFor="repeat-password" className="form-label">Repeat password</label>
+          <input
+            type="password"
+            className="form-control"
+            id="repeat-password"
+            placeholder="Enter Password..."
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
           />
       </div>
       {/* Submit button  */}
