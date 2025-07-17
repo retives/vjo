@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import "./styles/SignupForm.css";
 import axios from 'axios';
 import { useState } from 'react';
@@ -9,7 +8,6 @@ import { Link } from 'react-router-dom';
 function SignupForm() {
     // Constants and hooks
     const { login } = useContext(AuthContext);
-    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [full_name, setFullName] = useState('');
@@ -33,7 +31,10 @@ function SignupForm() {
           passInput.focus()
           return false
         }
-
+        if (email.length > 255 || password.length > 255 || full_name.length > 255){
+          setError('The entered information is too long')
+          return ;
+        }
         const response = await axios.post('http://localhost:8000/accounts/signup/', {
           email,
           full_name,
@@ -53,7 +54,7 @@ function SignupForm() {
           const status = error.response.status
           const data = error.response.data
           
-          if (status == 422 && data.error){
+          if (status === 422 && data.error){
             setError(data.error)
           } else if (data.detail){
             setError(data.detail)

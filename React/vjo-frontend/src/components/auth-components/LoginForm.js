@@ -22,6 +22,10 @@ function LoginForm() {
       setError('The fields can\'t be empty!')
       return false
     }
+    if (email.length > 255 || password.length > 255){
+      setError('The entered information is too long')
+      return ;
+    }
     //Sending the data to the server
     const response = await axios.post('http://localhost:8000/accounts/login/', {
       email,
