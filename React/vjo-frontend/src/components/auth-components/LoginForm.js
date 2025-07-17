@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../utils/AuthProvider';
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+
 import './styles/LoginForm.css';
 import axios from 'axios';
 function LoginForm() {
@@ -95,6 +97,11 @@ function LoginForm() {
     </button>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className='left-text'>
+        <span >
+          Want to create an account?<Link to={"/signup"}>Sign Up</Link>
+        </span>
+      </div>
     </form>
   );
 }

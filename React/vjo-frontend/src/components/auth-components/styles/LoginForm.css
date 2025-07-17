@@ -38,3 +38,7 @@ button{
 .icon{
     width: 2rem;
 }
+.left-text{
+    text-align: left;
+    width: 100%;
+}

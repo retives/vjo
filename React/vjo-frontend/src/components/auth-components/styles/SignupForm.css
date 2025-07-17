@@ -5,7 +5,6 @@
     justify-content: center;
     width: 30rem;
     margin: 70px auto;
-    margin-top: 120px;
     padding: 30px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -37,4 +36,9 @@ input {
 }
 .icon{
     width: 2rem;
+}
+.left-text{
+    text-align: left;
+    margin-top: 20px;
+    width: 100%;
 }

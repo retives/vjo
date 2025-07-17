@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../../utils/AuthProvider';
+import { Link } from 'react-router-dom';
+
 function SignupForm() {
     // Constants and hooks
     const { login } = useContext(AuthContext);
@@ -20,8 +22,8 @@ function SignupForm() {
       e.preventDefault();
       // Sending the request to the server
       try{
-        if (!email && !password && !full_name){
-          setError('Fill in the reuired fields')
+        if (!email || !password || !full_name){
+          setError('Please fill in the reuired fields')
           
           return false
         }
@@ -48,9 +50,20 @@ function SignupForm() {
       // Redirecting the user to the home page after successful signup
       }catch (error) {
         if (error.response){
-          console.error('Server error:', error.response.status);
-          setError(error.response.data.detail || 'An error occurred. Please try again.');
+          const status = error.response.status
+          const data = error.response.data
+          
+          if (status == 422 && data.error){
+            setError(data.error)
+          } else if (data.detail){
+            setError(data.detail)
+          }else {
+            setError('An error occurred. Please try again.');
+          }
+        }else {
+          setError('Network error. Please check your connection')
         }
+        
       }
       // navigate('/confirm-email');
     };
@@ -68,13 +81,13 @@ function SignupForm() {
             Log in with Google
           </button>
         </div>
-        <div className='button-wrapper mb-4 w-100'>
+      <div className='button-wrapper mb-4 w-100'>
           <button className = "Apple-login-button">
             <img src="/images/apple-icon.png" alt="Apple Icon" className='icon'/>
             Log in with Apple
           </button>
           </div>
-        </div>
+      </div>
       {/* Signup form */}
         {/* Email field */}
       <div className="mb-3">
@@ -113,6 +126,10 @@ function SignupForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
+        {/* Repeat password */}
+
+        <div className='mb-3'>
           <label htmlFor="repeat-password" className="form-label">Repeat password</label>
           <input
             type="password"
@@ -122,13 +139,17 @@ function SignupForm() {
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
-      </div>
+        </div>
       {/* Submit button  */}
       <button type="submit" className = "w-50" onClick={handleSubmit}>
         Sign Up
       </button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-      
+      <div className='left-text'>
+        <span >
+          Have an account? <br/><Link to={"/login"}>Log in.</Link>
+        </span>
+      </div>
       </div>
     );
   }
